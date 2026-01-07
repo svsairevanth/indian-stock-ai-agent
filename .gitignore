@@ -1,8 +1,14 @@
-# Environment
+# Environment variables - NEVER commit these!
 .env
-venv/
-env/
-.venv/
+.env.local
+.env.*.local
+*.env
+secrets.json
+credentials.json
+
+# API Keys
+*.pem
+*.key
 
 # Python
 __pycache__/
@@ -26,6 +32,12 @@ wheels/
 .installed.cfg
 *.egg
 
+# Virtual environments
+venv/
+ENV/
+env/
+.venv/
+
 # IDE
 .idea/
 .vscode/
@@ -33,12 +45,30 @@ wheels/
 *.swo
 *~
 
-# Reports (optional - uncomment to ignore generated PDFs)
-# reports/*.pdf
+# Claude Code
+.claude/
 
-# OS
+# Generated reports
+reports/
+*.pdf
+
+# OS files
 .DS_Store
 Thumbs.db
+nul
+desktop.ini
 
 # Logs
 *.log
+logs/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# MyPy
+.mypy_cache/
