@@ -21,6 +21,11 @@ from .news_fetcher import (
     get_market_news,
 )
 
+from .sentiment_analyzer import (
+    analyze_news_sentiment,
+    get_sentiment_score,
+)
+
 __all__ = [
     # Stock Data
     "get_stock_price",
@@ -34,4 +39,7 @@ __all__ = [
     # News
     "get_stock_news",
     "get_market_news",
+    # Sentiment Analysis
+    "analyze_news_sentiment",
+    "get_sentiment_score",
 ]

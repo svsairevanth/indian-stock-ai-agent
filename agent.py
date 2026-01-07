@@ -1,6 +1,13 @@
 """
-Indian Stock Analyst Agent - Main agent implementation using OpenAI Agents SDK.
-This agent analyzes Indian stocks and provides buy/sell/hold recommendations.
+Indian Stock Analyst Agent - Multi-Agent Implementation using OpenAI Agents SDK.
+
+This module provides a multi-agent system for comprehensive stock analysis:
+- Orchestrator Agent: Coordinates analysis and synthesizes recommendations
+- Fundamental Analyst: Analyzes company financials and valuation
+- Technical Analyst: Analyzes price action and indicators
+- Sentiment Analyst: Analyzes news sentiment and market mood
+
+The system provides BUY/SELL/HOLD recommendations with professional PDF reports.
 """
 
 from agents import Agent, Runner, ModelSettings
@@ -8,7 +15,13 @@ from pydantic import BaseModel, Field
 from typing import Optional, List
 from datetime import datetime
 
-# Import all tools
+# Import the multi-agent system
+from agents.orchestrator import stock_orchestrator_agent
+from agents.fundamental_analyst import fundamental_analyst_agent
+from agents.technical_analyst import technical_analyst_agent
+from agents.sentiment_analyst import sentiment_analyst_agent
+
+# Import all tools (for backward compatibility and single-agent mode)
 from tools.stock_data import (
     get_stock_price,
     get_stock_info,
@@ -24,12 +37,20 @@ from tools.news_fetcher import (
     get_stock_news,
     get_market_news,
 )
+from tools.sentiment_analyzer import (
+    analyze_news_sentiment,
+    get_sentiment_score,
+)
 from pdf_generator import create_stock_report
 
 from config import MODEL_NAME, AGENT_TEMPERATURE, MAX_TURNS
 
 
-# Structured output for stock analysis
+# ============================================================================
+# LEGACY SINGLE-AGENT (kept for backward compatibility)
+# ============================================================================
+
+# Structured output for stock analysis (legacy)
 class StockAnalysisResult(BaseModel):
     """Structured output for stock analysis."""
     symbol: str = Field(description="Stock symbol analyzed")
@@ -45,8 +66,8 @@ class StockAnalysisResult(BaseModel):
     summary: str = Field(description="Brief summary of the analysis")
 
 
-# Agent System Prompt
-STOCK_ANALYST_INSTRUCTIONS = """
+# Legacy single-agent instructions (kept for reference)
+LEGACY_STOCK_ANALYST_INSTRUCTIONS = """
 You are an expert Indian Stock Market Analyst AI specializing in NSE and BSE stocks.
 Your role is to provide comprehensive stock analysis and actionable recommendations.
 
@@ -54,7 +75,7 @@ Your role is to provide comprehensive stock analysis and actionable recommendati
 1. **Real-time Data**: Fetch current stock prices, trading volumes, and market data
 2. **Fundamental Analysis**: Analyze P/E ratios, P/B ratios, ROE, debt levels, growth metrics
 3. **Technical Analysis**: Calculate RSI, MACD, Moving Averages, Bollinger Bands, support/resistance
-4. **News Analysis**: Gather and analyze recent news affecting the stock
+4. **News & Sentiment Analysis**: Gather and analyze recent news with sentiment scoring
 5. **Report Generation**: Create professional PDF reports with recommendations
 
 ## Analysis Framework:
@@ -63,7 +84,7 @@ When analyzing a stock, you MUST:
 2. Fetch fundamental data (P/E, P/B, market cap, etc.)
 3. Calculate technical indicators (RSI, MACD, trend)
 4. Get support and resistance levels
-5. Fetch recent news about the stock
+5. Fetch recent news and analyze sentiment
 6. Synthesize all information into a recommendation
 
 ## Recommendation Criteria:
@@ -106,23 +127,14 @@ If user mentions they already own the stock:
 6. Always recommend stop-loss levels for risk management
 7. After completing analysis, ALWAYS generate a PDF report using create_stock_report tool
 
-## Response Format:
-After analysis, provide:
-1. Clear BUY/SELL/HOLD recommendation
-2. Target price (for BUY)
-3. Stop loss level
-4. Key supporting factors
-5. Risk factors to consider
-6. Investment time horizon
-
 Remember: Indian stock symbols need .NS suffix for NSE or .BO for BSE. The tools will auto-add .NS if not provided.
 """
 
 
-# Create the main stock analyst agent
+# Legacy single-agent (kept for backward compatibility)
 stock_analyst_agent = Agent(
     name="Indian Stock Analyst",
-    instructions=STOCK_ANALYST_INSTRUCTIONS,
+    instructions=LEGACY_STOCK_ANALYST_INSTRUCTIONS,
     model=MODEL_NAME,
     model_settings=ModelSettings(
         temperature=AGENT_TEMPERATURE,
@@ -140,63 +152,90 @@ stock_analyst_agent = Agent(
         # News Tools
         get_stock_news,
         get_market_news,
+        # Sentiment Analysis Tools
+        analyze_news_sentiment,
+        get_sentiment_score,
         # PDF Generator
         create_stock_report,
     ],
 )
 
 
-# Convenience functions for running the agent
-async def analyze_stock(query: str) -> str:
+# ============================================================================
+# MULTI-AGENT SYSTEM (NEW - RECOMMENDED)
+# ============================================================================
+
+# Export the multi-agent orchestrator as the primary agent
+multi_agent_analyst = stock_orchestrator_agent
+
+
+# ============================================================================
+# RUNNER FUNCTIONS
+# ============================================================================
+
+async def analyze_stock(query: str, use_multi_agent: bool = True) -> str:
     """
     Analyze a stock based on user query.
 
     Args:
         query: User's question about a stock (e.g., "Should I buy RELIANCE?")
+        use_multi_agent: If True, uses the multi-agent system (recommended).
+                        If False, uses the legacy single agent.
 
     Returns:
         Agent's analysis and recommendation.
     """
+    agent = multi_agent_analyst if use_multi_agent else stock_analyst_agent
+    max_turns = MAX_TURNS * 2 if use_multi_agent else MAX_TURNS  # More turns for multi-agent
+
     result = await Runner.run(
-        stock_analyst_agent,
+        agent,
         query,
-        max_turns=MAX_TURNS,
+        max_turns=max_turns,
     )
     return result.final_output
 
 
-def analyze_stock_sync(query: str) -> str:
+def analyze_stock_sync(query: str, use_multi_agent: bool = True) -> str:
     """
     Synchronous version of analyze_stock.
 
     Args:
         query: User's question about a stock.
+        use_multi_agent: If True, uses the multi-agent system.
 
     Returns:
         Agent's analysis and recommendation.
     """
+    agent = multi_agent_analyst if use_multi_agent else stock_analyst_agent
+    max_turns = MAX_TURNS * 2 if use_multi_agent else MAX_TURNS
+
     result = Runner.run_sync(
-        stock_analyst_agent,
+        agent,
         query,
-        max_turns=MAX_TURNS,
+        max_turns=max_turns,
     )
     return result.final_output
 
 
-async def analyze_stock_streaming(query: str):
+async def analyze_stock_streaming(query: str, use_multi_agent: bool = True):
     """
     Analyze stock with streaming output.
 
     Args:
         query: User's question about a stock.
+        use_multi_agent: If True, uses the multi-agent system.
 
     Yields:
         Streaming events from the agent.
     """
+    agent = multi_agent_analyst if use_multi_agent else stock_analyst_agent
+    max_turns = MAX_TURNS * 2 if use_multi_agent else MAX_TURNS
+
     result = await Runner.run_streamed(
-        stock_analyst_agent,
+        agent,
         query,
-        max_turns=MAX_TURNS,
+        max_turns=max_turns,
     )
 
     async for event in result.stream_events():
@@ -206,15 +245,31 @@ async def analyze_stock_streaming(query: str):
 
 
 # Interactive chat session
-async def interactive_session():
-    """Run an interactive chat session with the stock analyst."""
+async def interactive_session(use_multi_agent: bool = True):
+    """
+    Run an interactive chat session with the stock analyst.
+
+    Args:
+        use_multi_agent: If True, uses the multi-agent system (recommended).
+    """
+    agent_type = "Multi-Agent" if use_multi_agent else "Single-Agent"
+    agent = multi_agent_analyst if use_multi_agent else stock_analyst_agent
+    max_turns = MAX_TURNS * 2 if use_multi_agent else MAX_TURNS
+
     print("\n" + "="*60)
-    print("  INDIAN STOCK ANALYST AI  ")
+    print(f"  INDIAN STOCK ANALYST AI ({agent_type} System)")
     print("  Powered by OpenAI Agents SDK")
     print("="*60)
     print("\nWelcome! I can help you analyze Indian stocks (NSE/BSE).")
     print("Ask me about any stock, e.g., 'Should I buy RELIANCE?'")
-    print("Type 'quit' or 'exit' to end the session.\n")
+
+    if use_multi_agent:
+        print("\n[Multi-Agent Mode Active]")
+        print("- Fundamental Analyst: Analyzing financials")
+        print("- Technical Analyst: Analyzing charts")
+        print("- Sentiment Analyst: Analyzing news")
+
+    print("\nType 'quit' or 'exit' to end the session.\n")
 
     conversation_history = []
 
@@ -239,9 +294,9 @@ async def interactive_session():
 
             # Run the agent
             result = await Runner.run(
-                stock_analyst_agent,
+                agent,
                 full_input,
-                max_turns=MAX_TURNS,
+                max_turns=max_turns,
             )
 
             # Print the response
@@ -260,4 +315,5 @@ async def interactive_session():
 
 if __name__ == "__main__":
     import asyncio
-    asyncio.run(interactive_session())
+    # Default to multi-agent mode
+    asyncio.run(interactive_session(use_multi_agent=True))

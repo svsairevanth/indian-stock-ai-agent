@@ -19,12 +19,16 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from agent import (
     stock_analyst_agent,
+    multi_agent_analyst,
     analyze_stock,
     analyze_stock_sync,
     interactive_session,
 )
 from agents import Runner
 from config import MAX_TURNS, MODEL_NAME
+
+# Use multi-agent system by default
+USE_MULTI_AGENT = True
 
 
 def print_banner():
@@ -34,8 +38,12 @@ def print_banner():
     ║                                                               ║
     ║   🇮🇳  INDIAN STOCK ANALYST AI  📈                            ║
     ║                                                               ║
-    ║   Powered by OpenAI Agents SDK                                ║
+    ║   Powered by OpenAI Agents SDK (Multi-Agent Architecture)    ║
     ║   Analyze NSE & BSE Stocks with AI                            ║
+    ║                                                               ║
+    ║   Specialists:                                                ║
+    ║   • Fundamental Analyst  • Technical Analyst                 ║
+    ║   • Sentiment Analyst    • Orchestrator                      ║
     ║                                                               ║
     ╚═══════════════════════════════════════════════════════════════╝
     """
@@ -62,12 +70,14 @@ def print_help():
         - Indian indices (NIFTY50, SENSEX)
 
     FEATURES:
-        - Real-time price data
-        - Fundamental analysis (P/E, P/B, ROE, etc.)
-        - Technical analysis (RSI, MACD, Moving Averages)
-        - Support & Resistance levels
-        - News sentiment analysis
-        - PDF report generation
+        - Multi-Agent Architecture (Fundamental, Technical, Sentiment)
+        - Real-time price data from NSE/BSE
+        - Fundamental analysis (P/E, P/B, ROE, Debt, Growth)
+        - Technical analysis (RSI, MACD, Moving Averages, Trends)
+        - Support & Resistance levels with Fibonacci
+        - News sentiment analysis with VADER + TextBlob
+        - Bull/Bear case synthesis
+        - Professional PDF report generation
 
     ENVIRONMENT SETUP:
         Set your OpenAI API key:
@@ -84,11 +94,18 @@ async def single_query_mode(query: str):
     print(f"\n📊 Analyzing: {query}\n")
     print("-" * 50)
 
+    # Select agent based on mode
+    agent = multi_agent_analyst if USE_MULTI_AGENT else stock_analyst_agent
+    max_turns = MAX_TURNS * 2 if USE_MULTI_AGENT else MAX_TURNS
+
+    if USE_MULTI_AGENT:
+        print("🔄 Multi-Agent Mode: Delegating to specialist analysts...\n")
+
     try:
         result = await Runner.run(
-            stock_analyst_agent,
+            agent,
             query,
-            max_turns=MAX_TURNS,
+            max_turns=max_turns,
         )
         print(f"\n{result.final_output}")
 
@@ -132,8 +149,9 @@ async def main():
     else:
         # Interactive mode
         print(f"\n🤖 Model: {MODEL_NAME}")
+        print(f"🔀 Mode: {'Multi-Agent' if USE_MULTI_AGENT else 'Single-Agent'}")
         print(f"📁 Reports will be saved to: reports/")
-        await interactive_session()
+        await interactive_session(use_multi_agent=USE_MULTI_AGENT)
 
 
 if __name__ == "__main__":
