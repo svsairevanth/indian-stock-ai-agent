@@ -225,10 +225,18 @@ def generate_stock_report(data: StockReportData) -> str:
     if any([data.pe_ratio, data.pb_ratio, data.market_cap]):
         elements.append(Paragraph("FUNDAMENTAL ANALYSIS", heading_style))
 
+        # Convert decimal values to percentages
+        # ROE from yfinance is always decimal (0.47 = 47%)
+        # Dividend Yield from yfinance is ALREADY a percentage (0.36 = 0.36%, 1.9 = 1.9%)
+        roe_pct = data.roe * 100 if data.roe is not None else None
+
+        # Dividend yield is already a percentage from yfinance - use directly
+        div_yield_pct = data.dividend_yield
+
         fund_data = [
             ['P/E Ratio', _format_number(data.pe_ratio), 'Market Cap', _format_number(data.market_cap, "₹")],
-            ['P/B Ratio', _format_number(data.pb_ratio), 'Dividend Yield', _format_number(data.dividend_yield, suffix="%")],
-            ['ROE', _format_number(data.roe, suffix="%"), 'Debt/Equity', _format_number(data.debt_to_equity)],
+            ['P/B Ratio', _format_number(data.pb_ratio), 'Dividend Yield', _format_number(div_yield_pct, suffix="%")],
+            ['ROE', _format_number(roe_pct, suffix="%"), 'Debt/Equity', _format_number(data.debt_to_equity)],
         ]
 
         fund_table = Table(fund_data, colWidths=[1.5*inch, 1.3*inch, 1.5*inch, 1.3*inch])
@@ -364,13 +372,25 @@ def create_stock_report(
     detailed_analysis: str,
     target_price: float = None,
     stop_loss: float = None,
+    # Fundamental metrics
     pe_ratio: float = None,
     pb_ratio: float = None,
     market_cap: float = None,
+    roe: float = None,
+    debt_to_equity: float = None,
+    dividend_yield: float = None,
+    # Price data
+    week_52_high: float = None,
+    week_52_low: float = None,
+    day_change: float = None,
+    day_change_percent: float = None,
+    # Technical metrics
     rsi: float = None,
+    macd_signal: str = None,
     trend_direction: str = None,
     support_level: float = None,
     resistance_level: float = None,
+    # Analysis
     positive_factors: str = None,
     risk_factors: str = None,
     investment_horizon: str = None,
@@ -389,7 +409,15 @@ def create_stock_report(
         pe_ratio: Price to Earnings ratio (optional)
         pb_ratio: Price to Book ratio (optional)
         market_cap: Market capitalization (optional)
+        roe: Return on Equity percentage (optional)
+        debt_to_equity: Debt to Equity ratio (optional)
+        dividend_yield: Dividend yield percentage (optional)
+        week_52_high: 52-week high price (optional)
+        week_52_low: 52-week low price (optional)
+        day_change: Day price change (optional)
+        day_change_percent: Day price change percentage (optional)
         rsi: RSI indicator value (optional)
+        macd_signal: MACD signal - bullish, bearish, or neutral (optional)
         trend_direction: Trend direction - uptrend, downtrend, sideways (optional)
         support_level: Key support level (optional)
         resistance_level: Key resistance level (optional)
@@ -405,6 +433,30 @@ def create_stock_report(
         pos_factors = [f.strip() for f in positive_factors.split(',')] if positive_factors else None
         risk_factors_list = [f.strip() for f in risk_factors.split(',')] if risk_factors else None
 
+        # Validate and fix critical values
+        validated_stop_loss = stop_loss
+        validated_target_price = target_price
+        validated_week_52_high = week_52_high
+        validated_week_52_low = week_52_low
+
+        # Stop loss must be BELOW current price
+        if stop_loss is not None and stop_loss >= current_price:
+            # Invalid stop loss - set to None to show N/A rather than wrong value
+            validated_stop_loss = None
+
+        # Target price should typically be ABOVE current price for meaningful trades
+        # (Don't invalidate as sometimes SELL recommendations have lower targets)
+
+        # 52-week high must be >= current price
+        if week_52_high is not None and week_52_high < current_price:
+            # Use current price as 52-week high if provided value is less
+            validated_week_52_high = current_price
+
+        # 52-week low must be <= current price
+        if week_52_low is not None and week_52_low > current_price:
+            # Invalid 52-week low - set to None
+            validated_week_52_low = None
+
         # Create report data
         report_data = StockReportData(
             symbol=symbol,
@@ -413,15 +465,27 @@ def create_stock_report(
             recommendation=recommendation.upper(),
             confidence_score=min(max(confidence_score, 0), 100),
             detailed_analysis=detailed_analysis,
-            target_price=target_price,
-            stop_loss=stop_loss,
+            target_price=validated_target_price,
+            stop_loss=validated_stop_loss,
+            # Fundamental metrics
             pe_ratio=pe_ratio,
             pb_ratio=pb_ratio,
             market_cap=market_cap,
+            roe=roe,
+            debt_to_equity=debt_to_equity,
+            dividend_yield=dividend_yield,
+            # Price data
+            week_52_high=validated_week_52_high,
+            week_52_low=validated_week_52_low,
+            day_change=day_change,
+            day_change_percent=day_change_percent,
+            # Technical metrics
             rsi=rsi,
+            macd_signal=macd_signal,
             trend_direction=trend_direction,
             support_level=support_level,
             resistance_level=resistance_level,
+            # Analysis
             positive_factors=pos_factors,
             risk_factors=risk_factors_list,
             investment_horizon=investment_horizon,

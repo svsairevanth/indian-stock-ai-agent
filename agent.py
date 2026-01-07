@@ -10,7 +10,7 @@ This module provides a multi-agent system for comprehensive stock analysis:
 The system provides BUY/SELL/HOLD recommendations with professional PDF reports.
 """
 
-from agents import Agent, Runner, ModelSettings
+from openai_sdk import Agent, Runner, ModelSettings
 from pydantic import BaseModel, Field
 from typing import Optional, List
 from datetime import datetime
@@ -241,7 +241,7 @@ async def analyze_stock_streaming(query: str, use_multi_agent: bool = True):
     async for event in result.stream_events():
         yield event
 
-    return result.final_output
+    # Note: final_output available via result.final_output after iteration
 
 
 # Interactive chat session

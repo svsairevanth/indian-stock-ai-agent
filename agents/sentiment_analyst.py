@@ -3,7 +3,7 @@ Sentiment Analyst Agent - Specializes in news sentiment analysis.
 Analyzes news headlines, market mood, and sentiment indicators.
 """
 
-from agents import Agent, ModelSettings
+from openai_sdk import Agent, ModelSettings
 
 # Import tools
 from tools.news_fetcher import get_stock_news, get_market_news
@@ -88,6 +88,9 @@ After analysis, provide:
 - Consider market context (bull/bear market sentiment)
 - Be objective in assessment
 - Note if news is already priced in (old news)
+
+## CRITICAL: After completing your analysis, you MUST hand off back to the Stock Analysis Orchestrator
+so they can continue with other analysts and generate the final report.
 """
 
 

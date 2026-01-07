@@ -1,0 +1,144 @@
+{
+  "meta": {
+    "description": "Version tracking for simulated/reference data in the Stock Analyst Agent",
+    "purpose": "This file tracks which data is hardcoded vs real-time to help users understand data freshness",
+    "created": "2024-12-06",
+    "last_updated": "2024-12-06"
+  },
+
+  "real_time_data_sources": {
+    "description": "These data sources fetch LIVE data from APIs",
+    "sources": {
+      "stock_prices": {
+        "provider": "Yahoo Finance (yfinance)",
+        "freshness": "Real-time (15-min delay for NSE)",
+        "reliability": "HIGH"
+      },
+      "technical_indicators": {
+        "provider": "Calculated from yfinance historical data",
+        "freshness": "Real-time",
+        "reliability": "HIGH"
+      },
+      "nifty_benchmark": {
+        "provider": "Yahoo Finance (^NSEI)",
+        "freshness": "Real-time",
+        "reliability": "HIGH"
+      },
+      "sector_indices": {
+        "provider": "Yahoo Finance sectoral indices",
+        "freshness": "Real-time",
+        "reliability": "HIGH"
+      },
+      "global_markets": {
+        "provider": "Yahoo Finance (US markets, commodities)",
+        "freshness": "Real-time",
+        "reliability": "HIGH"
+      },
+      "stock_fundamentals": {
+        "provider": "Yahoo Finance",
+        "freshness": "Quarterly updated",
+        "reliability": "HIGH"
+      }
+    }
+  },
+
+  "simulated_data_sources": {
+    "description": "These data sources use SIMULATED/REFERENCE data for demonstration",
+    "warning": "Do not rely on these for actual investment decisions",
+    "sources": {
+      "india_macro_indicators": {
+        "file": "tools/macro_data.py",
+        "function": "get_india_macro_indicators()",
+        "data_version": "2024-12-06",
+        "includes": [
+          "RBI repo rate",
+          "Inflation (CPI/WPI)",
+          "GDP growth estimates",
+          "PMI data",
+          "Forex reserves",
+          "India VIX approximation"
+        ],
+        "recommended_real_sources": [
+          "RBI: https://www.rbi.org.in",
+          "MOSPI: https://www.mospi.gov.in",
+          "Trading Economics: https://tradingeconomics.com/india"
+        ]
+      },
+      "fii_dii_activity": {
+        "file": "tools/macro_data.py",
+        "function": "get_fii_dii_activity()",
+        "data_version": "2024-12-06",
+        "includes": [
+          "FII net buy/sell",
+          "DII net buy/sell",
+          "Institutional flow trends"
+        ],
+        "recommended_real_sources": [
+          "NSE: https://www.nseindia.com/reports/fii-dii",
+          "SEBI: https://www.sebi.gov.in/statistics.html"
+        ]
+      },
+      "company_announcements": {
+        "file": "tools/document_analyzer.py",
+        "function": "fetch_company_announcements()",
+        "data_version": "2024-12-06",
+        "note": "Sample announcements for demonstration",
+        "recommended_real_sources": [
+          "BSE: https://www.bseindia.com/corporates/ann.html",
+          "NSE: https://www.nseindia.com/companies-listing/corporate-filings-announcements"
+        ]
+      },
+      "management_commentary": {
+        "file": "tools/document_analyzer.py",
+        "function": "get_management_commentary()",
+        "data_version": "2024-12-06",
+        "note": "Generated sample commentary",
+        "recommended_real_sources": [
+          "Company quarterly earnings calls",
+          "BSE/NSE investor presentations",
+          "Annual reports"
+        ]
+      },
+      "peer_comparison": {
+        "file": "tools/document_analyzer.py",
+        "function": "get_peer_comparison()",
+        "data_version": "2024-12-06",
+        "note": "Hardcoded sector peer mappings",
+        "recommended_real_sources": [
+          "Screener.in",
+          "Moneycontrol",
+          "Trendlyne"
+        ]
+      }
+    }
+  },
+
+  "upgrade_recommendations": {
+    "priority_1_high": [
+      {
+        "data": "FII/DII Activity",
+        "reason": "Critical for understanding institutional flows",
+        "solution": "Scrape NSE FII/DII daily reports or use paid API"
+      },
+      {
+        "data": "Company Announcements",
+        "reason": "Market-moving news affects stock prices",
+        "solution": "Integrate BSE/NSE announcement APIs"
+      }
+    ],
+    "priority_2_medium": [
+      {
+        "data": "India Macro Indicators",
+        "reason": "Important for macro context",
+        "solution": "Use RBI API or Trading Economics API"
+      }
+    ],
+    "priority_3_low": [
+      {
+        "data": "Peer Comparison Mappings",
+        "reason": "Static sector mappings rarely change",
+        "solution": "Update quarterly or use industry classification APIs"
+      }
+    ]
+  }
+}

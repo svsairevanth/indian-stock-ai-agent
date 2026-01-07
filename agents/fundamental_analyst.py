@@ -3,7 +3,7 @@ Fundamental Analyst Agent - Specializes in fundamental analysis of stocks.
 Analyzes P/E, P/B, ROE, debt levels, growth metrics, and financial health.
 """
 
-from agents import Agent, ModelSettings
+from openai_sdk import Agent, ModelSettings
 
 # Import tools
 from tools.stock_data import get_stock_info, get_fundamentals
@@ -69,6 +69,9 @@ After analysis, provide:
 - Consider both absolute values and trends
 - Be objective and data-driven
 - Highlight any red flags clearly
+
+## CRITICAL: After completing your analysis, you MUST hand off back to the Stock Analysis Orchestrator
+so they can continue with other analysts and generate the final report.
 """
 
 

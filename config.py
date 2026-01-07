@@ -69,5 +69,5 @@ PDF_OUTPUT_DIR = os.path.join(os.path.dirname(__file__), "reports")
 os.makedirs(PDF_OUTPUT_DIR, exist_ok=True)
 
 # Agent Settings
-MAX_TURNS = 15
+MAX_TURNS = 25  # Increased for multi-agent system (10 agents + orchestrator coordination)
 AGENT_TEMPERATURE = 0.3

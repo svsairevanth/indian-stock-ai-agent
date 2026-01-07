@@ -3,7 +3,7 @@ Technical Analyst Agent - Specializes in technical analysis of stocks.
 Analyzes price action, indicators, trends, and chart patterns.
 """
 
-from agents import Agent, ModelSettings
+from openai_sdk import Agent, ModelSettings
 
 # Import tools
 from tools.technical_analysis import (
@@ -97,6 +97,9 @@ After analysis, provide:
 - Look for confluence of signals
 - Be objective - don't force a bullish/bearish view
 - Clearly state if signals are mixed/unclear
+
+## CRITICAL: After completing your analysis, you MUST hand off back to the Stock Analysis Orchestrator
+so they can continue with other analysts and generate the final report.
 """
 
 
