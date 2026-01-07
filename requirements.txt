@@ -1,0 +1,25 @@
+# OpenAI Agents SDK
+openai-agents>=0.6.0
+openai>=1.0.0
+
+# Stock Data
+yfinance>=0.2.40
+pandas>=2.0.0
+numpy>=1.24.0
+
+# Technical Analysis
+ta>=0.11.0
+
+# News
+requests>=2.31.0
+beautifulsoup4>=4.12.0
+lxml>=5.0.0
+
+# PDF Generation
+reportlab>=4.0.0
+
+# Environment Variables
+python-dotenv>=1.0.0
+
+# Date handling
+python-dateutil>=2.8.0
