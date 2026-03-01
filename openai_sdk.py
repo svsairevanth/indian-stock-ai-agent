@@ -8,9 +8,12 @@ manipulating sys.path to exclude the local directory.
 
 import sys
 import os
+from contextlib import contextmanager
 
 SDK_AVAILABLE = False
 _import_error = None
+_sdk = None
+_sdk_modules_snapshot = {}
 
 # Get current directory to exclude
 _current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -18,7 +21,6 @@ _stock_agent_dir = _current_dir  # This is the Stock Agent folder
 
 # Save original state
 _original_path = sys.path.copy()
-_cached_agents = sys.modules.get('agents')
 
 # Clean all agents-related modules from cache
 _agents_modules_to_restore = {}
@@ -31,8 +33,13 @@ try:
     # This ensures we get site-packages version
     clean_path = []
     for p in sys.path:
-        # Normalize paths for comparison
-        p_norm = os.path.normpath(p).lower()
+        # Resolve entries like "" / "." to absolute paths so local project root is excluded reliably.
+        try:
+            resolved = os.path.abspath(p if p else os.getcwd())
+        except Exception:
+            resolved = p
+
+        p_norm = os.path.normpath(resolved).lower()
         stock_norm = os.path.normpath(_stock_agent_dir).lower()
 
         if p_norm != stock_norm and not p_norm.startswith(stock_norm):
@@ -42,12 +49,15 @@ try:
 
     # Now import the SDK
     import agents as _sdk
+    _sdk_modules_snapshot = {
+        key: value
+        for key, value in sys.modules.items()
+        if key == 'agents' or key.startswith('agents.')
+    }
 
     # Get the components we need
-    Agent = _sdk.Agent
-    Runner = _sdk.Runner
     ModelSettings = _sdk.ModelSettings
-    function_tool = getattr(_sdk, 'function_tool', lambda x: x)
+    _sdk_function_tool = getattr(_sdk, 'function_tool', lambda x: x)
     handoff = getattr(_sdk, 'handoff', None)
     SDK_AVAILABLE = True
 
@@ -67,6 +77,71 @@ finally:
     for key in list(sys.modules.keys()):
         if key == 'agents' or key.startswith('agents.'):
             del sys.modules[key]
+
+    # Restore local agents modules (if any were loaded before wrapper import)
+    for key, value in _agents_modules_to_restore.items():
+        sys.modules[key] = value
+
+
+if SDK_AVAILABLE:
+    @contextmanager
+    def _sdk_namespace():
+        """
+        Temporarily map `agents.*` imports to the SDK package during runtime calls.
+        This avoids collisions with the local `agents/` package.
+        """
+        local_snapshot = {
+            key: value
+            for key, value in sys.modules.items()
+            if key == 'agents' or key.startswith('agents.')
+        }
+        try:
+            for key in list(sys.modules.keys()):
+                if key == 'agents' or key.startswith('agents.'):
+                    del sys.modules[key]
+            for key, value in _sdk_modules_snapshot.items():
+                sys.modules[key] = value
+            yield
+        finally:
+            for key in list(sys.modules.keys()):
+                if key == 'agents' or key.startswith('agents.'):
+                    del sys.modules[key]
+            for key, value in local_snapshot.items():
+                sys.modules[key] = value
+
+
+    class Agent(_sdk.Agent):
+        """SDK Agent with namespace collision guard."""
+
+        def __init__(self, *args, **kwargs):
+            with _sdk_namespace():
+                super().__init__(*args, **kwargs)
+
+
+    class Runner:
+        """SDK Runner with namespace collision guard for every invocation."""
+
+        @staticmethod
+        async def run(*args, **kwargs):
+            with _sdk_namespace():
+                return await _sdk.Runner.run(*args, **kwargs)
+
+        @staticmethod
+        def run_sync(*args, **kwargs):
+            with _sdk_namespace():
+                return _sdk.Runner.run_sync(*args, **kwargs)
+
+        @staticmethod
+        async def run_streamed(*args, **kwargs):
+            with _sdk_namespace():
+                return await _sdk.Runner.run_streamed(*args, **kwargs)
+
+
+    def function_tool(func=None, **kwargs):
+        """SDK function_tool with namespace guard."""
+        with _sdk_namespace():
+            decorated = _sdk_function_tool(func, **kwargs) if func is not None else _sdk_function_tool(**kwargs)
+        return decorated
 
 # Fallback stubs if SDK not available
 if not SDK_AVAILABLE:

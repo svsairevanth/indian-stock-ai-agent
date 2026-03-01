@@ -6,9 +6,27 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+
+def _env_int(name: str, default: int) -> int:
+    raw = os.getenv(name, str(default))
+    try:
+        return int(raw)
+    except ValueError:
+        return default
+
+
 # OpenAI Configuration
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
-MODEL_NAME = os.getenv("MODEL_NAME", "gpt-4o")
+MODEL_NAME = os.getenv("MODEL_NAME", "gpt-4o-mini")
+
+# Exa MCP HTTP (no API key required when endpoint is already provisioned)
+EXA_MCP_HTTP_URL = os.getenv(
+    "EXA_MCP_HTTP_URL",
+    "https://mcp.exa.ai/mcp?tools=web_search_exa,get_code_context_exa,crawling_exa,company_research_exa,linkedin_search_exa,deep_researcher_start,deep_researcher_check",
+)
+EXA_HTTP_TIMEOUT_SECONDS = _env_int("EXA_HTTP_TIMEOUT_SECONDS", 25)
+EXA_DEEP_RESEARCH_TIMEOUT_SECONDS = _env_int("EXA_DEEP_RESEARCH_TIMEOUT_SECONDS", 120)
+EXA_DEEP_RESEARCH_POLL_INTERVAL_SECONDS = _env_int("EXA_DEEP_RESEARCH_POLL_INTERVAL_SECONDS", 6)
 
 # Stock Exchange Configuration
 NSE_SUFFIX = ".NS"

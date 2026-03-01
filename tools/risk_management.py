@@ -460,7 +460,7 @@ def assess_trade_risk_reward(
                 "estimated_win_probability": round(win_prob, 2),
                 "technical_setup": {
                     "rsi": round(rsi, 2),
-                    "macd_bullish": macd > macd_signal,
+                    "macd_bullish": bool(macd > macd_signal),
                 },
             },
 

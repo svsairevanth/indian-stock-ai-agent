@@ -27,6 +27,10 @@ class StockReportData(BaseModel):
     confidence_score: float = Field(ge=0, le=100, description="Confidence percentage")
     target_price: Optional[float] = None
     stop_loss: Optional[float] = None
+    entry_price: Optional[float] = None
+    risk_reward_ratio: Optional[float] = None
+    win_probability: Optional[float] = None
+    expected_value_percent: Optional[float] = None
 
     # Price Information
     day_change: Optional[float] = None
@@ -53,6 +57,7 @@ class StockReportData(BaseModel):
     fundamental_summary: Optional[str] = None
     technical_summary: Optional[str] = None
     news_summary: Optional[str] = None
+    citations: Optional[List[dict]] = None
     risk_factors: Optional[List[str]] = None
     positive_factors: Optional[List[str]] = None
 
@@ -75,6 +80,13 @@ def _format_number(value, prefix="", suffix="", decimals=2):
         else:
             return f"{prefix}{value:.{decimals}f}{suffix}"
     return str(value)
+
+
+def _format_percent(value, decimals=2):
+    """Format percentage values, handling None."""
+    if value is None:
+        return "N/A"
+    return f"{value:.{decimals}f}%"
 
 
 def _get_recommendation_color(recommendation: str) -> colors.Color:
@@ -195,23 +207,25 @@ def generate_stock_report(data: StockReportData) -> str:
 
     # Price Summary Table
     price_data = [
-        ['Current Price', f"₹{data.current_price:,.2f}"],
-        ['Target Price', _format_number(data.target_price, "₹") if data.target_price else "N/A"],
-        ['Stop Loss', _format_number(data.stop_loss, "₹") if data.stop_loss else "N/A"],
-        ['52-Week High', _format_number(data.week_52_high, "₹")],
-        ['52-Week Low', _format_number(data.week_52_low, "₹")],
+        ['Current Price', f"Rs {data.current_price:,.2f}", ""],
+        ['Entry Price', _format_number(data.entry_price, "Rs ") if data.entry_price else f"Rs {data.current_price:,.2f}", ""],
+        ['Target Price', _format_number(data.target_price, "Rs ") if data.target_price else "N/A", ""],
+        ['Stop Loss', _format_number(data.stop_loss, "Rs ") if data.stop_loss else "N/A", ""],
+        ['52-Week High', _format_number(data.week_52_high, "Rs "), ""],
+        ['52-Week Low', _format_number(data.week_52_low, "Rs "), ""],
+        ['Day Change', _format_number(data.day_change, "Rs "), _format_percent(data.day_change_percent) if data.day_change_percent is not None else ""],
     ]
 
-    if data.target_price:
+    if data.target_price and data.current_price:
         upside = ((data.target_price - data.current_price) / data.current_price) * 100
-        price_data.append(['Potential Upside', f"{upside:+.1f}%"])
+        price_data.append(['Potential Upside', f"{upside:+.1f}%", ""])
 
-    price_table = Table(price_data, colWidths=[3*inch, 2.5*inch])
+    price_table = Table(price_data, colWidths=[2.7*inch, 1.9*inch, 0.9*inch])
     price_table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (0, -1), colors.HexColor('#f0f0f0')),
+        ('BACKGROUND', (0, 0), (0, -1), colors.HexColor('#f6f8fc')),
         ('TEXTCOLOR', (0, 0), (-1, -1), colors.black),
         ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
-        ('ALIGN', (1, 0), (1, -1), 'RIGHT'),
+        ('ALIGN', (1, 0), (2, -1), 'RIGHT'),
         ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
         ('FONTSIZE', (0, 0), (-1, -1), 10),
         ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
@@ -220,6 +234,28 @@ def generate_stock_report(data: StockReportData) -> str:
     ]))
     elements.append(price_table)
     elements.append(Spacer(1, 20))
+
+    # Trade Setup Statistics
+    if any([data.risk_reward_ratio, data.win_probability, data.expected_value_percent]):
+        elements.append(Paragraph("TRADE SETUP STATISTICS", heading_style))
+        stats_data = [
+            ['Risk/Reward Ratio', _format_number(data.risk_reward_ratio, decimals=2)],
+            ['Estimated Win Probability', _format_percent(data.win_probability)],
+            ['Expected Edge', _format_percent(data.expected_value_percent)],
+        ]
+        stats_table = Table(stats_data, colWidths=[3*inch, 2.5*inch])
+        stats_table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (0, -1), colors.HexColor('#eefaf2')),
+            ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+            ('ALIGN', (1, 0), (1, -1), 'RIGHT'),
+            ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
+            ('FONTSIZE', (0, 0), (-1, -1), 10),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 7),
+            ('TOPPADDING', (0, 0), (-1, -1), 7),
+            ('GRID', (0, 0), (-1, -1), 0.5, colors.lightgrey),
+        ]))
+        elements.append(stats_table)
+        elements.append(Spacer(1, 15))
 
     # Fundamental Analysis Section
     if any([data.pe_ratio, data.pb_ratio, data.market_cap]):
@@ -234,7 +270,7 @@ def generate_stock_report(data: StockReportData) -> str:
         div_yield_pct = data.dividend_yield
 
         fund_data = [
-            ['P/E Ratio', _format_number(data.pe_ratio), 'Market Cap', _format_number(data.market_cap, "₹")],
+            ['P/E Ratio', _format_number(data.pe_ratio), 'Market Cap', _format_number(data.market_cap, "Rs ")],
             ['P/B Ratio', _format_number(data.pb_ratio), 'Dividend Yield', _format_number(div_yield_pct, suffix="%")],
             ['ROE', _format_number(roe_pct, suffix="%"), 'Debt/Equity', _format_number(data.debt_to_equity)],
         ]
@@ -266,8 +302,8 @@ def generate_stock_report(data: StockReportData) -> str:
 
         tech_data = [
             ['RSI (14)', _format_number(data.rsi), 'Trend', data.trend_direction or "N/A"],
-            ['MACD Signal', data.macd_signal or "N/A", 'Support', _format_number(data.support_level, "₹")],
-            ['', '', 'Resistance', _format_number(data.resistance_level, "₹")],
+            ['MACD Signal', data.macd_signal or "N/A", 'Support', _format_number(data.support_level, "Rs ")],
+            ['', '', 'Resistance', _format_number(data.resistance_level, "Rs ")],
         ]
 
         tech_table = Table(tech_data, colWidths=[1.5*inch, 1.3*inch, 1.5*inch, 1.3*inch])
@@ -295,14 +331,14 @@ def generate_stock_report(data: StockReportData) -> str:
     if data.positive_factors:
         elements.append(Paragraph("POSITIVE FACTORS", heading_style))
         for factor in data.positive_factors:
-            elements.append(Paragraph(f"• {factor}", body_style))
+            elements.append(Paragraph(f"- {factor}", body_style))
         elements.append(Spacer(1, 10))
 
     # Risk Factors
     if data.risk_factors:
         elements.append(Paragraph("RISK FACTORS", heading_style))
         for risk in data.risk_factors:
-            elements.append(Paragraph(f"• {risk}", body_style))
+            elements.append(Paragraph(f"- {risk}", body_style))
         elements.append(Spacer(1, 10))
 
     # News Summary
@@ -310,6 +346,36 @@ def generate_stock_report(data: StockReportData) -> str:
         elements.append(Paragraph("NEWS & SENTIMENT", heading_style))
         elements.append(Paragraph(data.news_summary, body_style))
         elements.append(Spacer(1, 15))
+
+    # Citations / Sources
+    if data.citations:
+        elements.append(Paragraph("SOURCES & CITATIONS", heading_style))
+        link_style = ParagraphStyle(
+            "CitationLink",
+            parent=body_style,
+            fontSize=9,
+            leading=12,
+            textColor=colors.HexColor("#1a4f8b"),
+            alignment=TA_LEFT,
+        )
+        for idx, citation in enumerate(data.citations[:12], start=1):
+            title = (citation or {}).get("title") or "Source"
+            url = (citation or {}).get("url") or ""
+            source = (citation or {}).get("source") or ""
+            if not url:
+                continue
+            safe_title = str(title).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+            safe_url = str(url).replace("&", "&amp;")
+            safe_source = str(source).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+            display_url = url if len(url) <= 90 else f"{url[:87]}..."
+            safe_display_url = display_url.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+            text = (
+                f"{idx}. {safe_title} ({safe_source})"
+                f"<br/><link href=\"{safe_url}\">{safe_display_url}</link>"
+            )
+            elements.append(Paragraph(text, link_style))
+            elements.append(Spacer(1, 6))
+        elements.append(Spacer(1, 10))
 
     # Detailed Analysis
     elements.append(Paragraph("DETAILED ANALYSIS", heading_style))
@@ -372,6 +438,10 @@ def create_stock_report(
     detailed_analysis: str,
     target_price: float = None,
     stop_loss: float = None,
+    entry_price: float = None,
+    risk_reward_ratio: float = None,
+    win_probability: float = None,
+    expected_value_percent: float = None,
     # Fundamental metrics
     pe_ratio: float = None,
     pb_ratio: float = None,
@@ -467,6 +537,10 @@ def create_stock_report(
             detailed_analysis=detailed_analysis,
             target_price=validated_target_price,
             stop_loss=validated_stop_loss,
+            entry_price=entry_price,
+            risk_reward_ratio=risk_reward_ratio,
+            win_probability=win_probability,
+            expected_value_percent=expected_value_percent,
             # Fundamental metrics
             pe_ratio=pe_ratio,
             pb_ratio=pb_ratio,

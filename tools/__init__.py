@@ -45,6 +45,12 @@ from .news_intelligence import (
     get_sector_news,
     get_market_mood_index,
 )
+from .exa_research import (
+    exa_web_search_stock_news,
+    exa_company_snapshot,
+    exa_deep_stock_research,
+    exa_live_company_intelligence,
+)
 
 # Macro Data Tools
 from .macro_data import (
@@ -101,6 +107,10 @@ __all__ = [
     "analyze_news_with_events",
     "get_sector_news",
     "get_market_mood_index",
+    "exa_web_search_stock_news",
+    "exa_company_snapshot",
+    "exa_deep_stock_research",
+    "exa_live_company_intelligence",
     # Macro Data
     "get_india_macro_indicators",
     "get_nifty_benchmark_data",

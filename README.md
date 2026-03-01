@@ -44,6 +44,7 @@ An AI-powered **advanced multi-agent** stock analysis system for Indian markets 
 - **Document Analysis**: Quarterly results, company announcements, peer comparison
 - **Risk Management**: Position sizing, ATR-based stop loss, risk-reward assessment
 - **Portfolio Analysis**: Health score, diversification, correlation, rebalancing
+- **Exa Live Research Integration**: Real-time web/company/deep research via MCP HTTP tools
 
 ### Output
 - **Professional PDF Reports**: Comprehensive reports with all analysis
@@ -85,6 +86,7 @@ Stock Agent/
 │   ├── technical_analysis.py # Technical indicators
 │   ├── news_fetcher.py     # News fetching
 │   ├── sentiment_analyzer.py # VADER + TextBlob sentiment
+│   ├── exa_research.py     # Exa MCP HTTP live research (NEW)
 │   ├── macro_data.py       # India macro indicators (NEW)
 │   ├── portfolio_analyzer.py # Portfolio analysis (NEW)
 │   ├── risk_management.py  # Position sizing/stops (NEW)
@@ -139,6 +141,40 @@ python main.py "Analyze TCS for long-term investment"
 python main.py "I own INFY at 1500, should I hold or sell?"
 ```
 
+### Web Chat Mode (HTML Frontend + PDF Links)
+```bash
+python web_server.py
+```
+Then open `http://127.0.0.1:8000` in your browser.
+
+Web app features now include:
+- User registration/login with role support (`user`, `admin`)
+- SQLite persistence (`app_data.db`) for users, sessions, chat history, reports
+- Previous chats and generated report history in UI
+- Admin panel for account/report/chat statistics
+
+Important defaults:
+- If no admin exists, server bootstraps one from env:
+  - `ADMIN_USERNAME` (default: `admin`)
+  - `ADMIN_PASSWORD` (default: `admin123`, change immediately)
+
+Available web routes:
+- `GET /` -> rich chat UI (`chat.html`)
+- `POST /api/register` -> create user account
+- `POST /api/login` -> login user/admin
+- `POST /api/logout` -> logout session
+- `GET /api/me` -> current session user
+- `POST /api/chat` -> run analysis + generate PDF + persist history
+- `POST /api/chat/start` -> start async analysis job and return `job_id`
+- `GET /api/chat/status?job_id=...` -> poll live progress/status/result
+- `GET /api/chats` -> previous chat history for logged-in user
+- `GET /api/reports` -> previous generated reports (all for admin, own for user)
+- `GET /api/prompt-examples` -> suggested prompts
+- `GET /api/admin/stats` -> admin stats
+- `GET /api/admin/users` -> admin user list
+- `GET /reports/<filename>.pdf` -> open generated report (auth + ownership enforced)
+- `GET /health` -> basic server health (now includes Exa MCP config visibility)
+
 ### Example Queries
 
 **Stock Analysis:**
@@ -169,6 +205,7 @@ When you analyze a stock, the system runs through 4 phases:
 1. **Fundamental Analyst** → Valuation, profitability, growth metrics
 2. **Technical Analyst** → Price action, indicators, support/resistance
 3. **Sentiment Analyst** → News sentiment from multiple sources
+3b. **News Intelligence Analyst** → Exa real-time search/snapshot/deep-research + event analysis
 4. **Macro Analyst** → RBI policy, inflation, FII/DII flows
 5. **Document Analyst** → Quarterly results, peer comparison
 

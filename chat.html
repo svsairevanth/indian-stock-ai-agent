@@ -1,0 +1,1483 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Stock Intelligence Studio</title>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap");
+
+    :root {
+      --bg-1: #edf6ff;
+      --bg-2: #fff3e8;
+      --ink: #0c1d30;
+      --muted: #4f687f;
+      --line: rgba(20, 48, 77, 0.14);
+      --panel: rgba(255, 255, 255, 0.72);
+      --panel-strong: rgba(255, 255, 255, 0.9);
+      --blue: #0a84d6;
+      --blue-2: #165ef0;
+      --orange: #ea6e2b;
+      --green: #148f62;
+      --red: #c03e3e;
+      --shadow: 0 18px 52px rgba(15, 44, 77, 0.16);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: "Sora", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 18% 18%, #ffffff 0%, transparent 34%),
+        radial-gradient(circle at 86% 12%, #fff1e6 0%, transparent 28%),
+        radial-gradient(circle at 82% 85%, #e9f8ff 0%, transparent 26%),
+        linear-gradient(130deg, var(--bg-1), var(--bg-2));
+      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    .grain {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.2;
+      background-image: radial-gradient(rgba(14, 107, 168, 0.08) 0.5px, transparent 0.5px);
+      background-size: 3px 3px;
+      z-index: 0;
+    }
+
+    .shell {
+      position: relative;
+      z-index: 1;
+      height: 100%;
+      padding: clamp(12px, 2vw, 20px);
+    }
+
+    .hidden { display: none !important; }
+
+    .auth-wrap {
+      height: 100%;
+      display: grid;
+      place-items: center;
+    }
+
+    .auth-card {
+      width: min(460px, 100%);
+      background: var(--panel-strong);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+      padding: 24px;
+      animation: rise 0.35s ease;
+    }
+
+    .auth-title {
+      margin: 0 0 8px;
+      font-size: 1.35rem;
+    }
+
+    .auth-sub {
+      color: var(--muted);
+      margin: 0 0 18px;
+      font-size: 0.9rem;
+    }
+
+    .switch {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .switch button {
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 12px;
+      padding: 10px 12px;
+      cursor: pointer;
+      font: inherit;
+      font-size: 0.9rem;
+      color: var(--ink);
+    }
+
+    .switch .active {
+      background: linear-gradient(145deg, #0e6ba8, #2181c1);
+      color: #fff;
+      border-color: transparent;
+    }
+
+    .field {
+      margin-bottom: 10px;
+    }
+
+    .field input {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+      font: inherit;
+      background: #fff;
+    }
+
+    .auth-action {
+      margin-top: 6px;
+      width: 100%;
+      border: 0;
+      border-radius: 12px;
+      padding: 12px 14px;
+      font: inherit;
+      font-weight: 600;
+      color: #fff;
+      background: linear-gradient(145deg, #0e6ba8, #2181c1);
+      cursor: pointer;
+    }
+
+    .hint {
+      margin-top: 12px;
+      font-size: 0.82rem;
+      color: var(--muted);
+      font-family: "JetBrains Mono", monospace;
+      line-height: 1.35;
+    }
+
+    .error {
+      margin-top: 10px;
+      color: #9f1f1f;
+      font-size: 0.85rem;
+    }
+
+    .app {
+      height: 100%;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: 12px;
+    }
+
+    .topbar {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: var(--panel);
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow);
+      padding: 10px 14px;
+      display: grid;
+      grid-template-columns: auto 1fr auto auto;
+      align-items: center;
+      gap: 10px;
+      animation: rise 0.35s ease;
+    }
+
+    .brand {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      white-space: nowrap;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: #fff;
+      font-size: 0.78rem;
+      font-family: "JetBrains Mono", monospace;
+      color: #345267;
+    }
+
+    .tabset {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    .tabset button, .topbar .logout {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+      border-radius: 10px;
+      padding: 8px 12px;
+      font: inherit;
+      font-size: 0.86rem;
+      cursor: pointer;
+    }
+
+    .tabset .active {
+      border-color: transparent;
+      background: linear-gradient(145deg, #0e6ba8, #2181c1);
+      color: #fff;
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 12px;
+      min-height: 0;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      backdrop-filter: blur(9px);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      min-height: 0;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      animation: rise 0.35s ease;
+    }
+
+    .panel h3 {
+      margin: 0;
+      font-size: 0.86rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #436274;
+      padding: 14px 14px 10px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .panel-body {
+      padding: 12px;
+      overflow: auto;
+      min-height: 0;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .chip {
+      border: 1px solid rgba(33, 129, 193, 0.24);
+      color: #0e5d92;
+      background: rgba(255, 255, 255, 0.84);
+      border-radius: 999px;
+      padding: 7px 10px;
+      font-size: 0.74rem;
+      cursor: pointer;
+      line-height: 1.2;
+    }
+
+    .history-item, .report-item {
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 12px;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+
+    .history-item .title, .report-item .title {
+      font-size: 0.82rem;
+      margin-bottom: 5px;
+      line-height: 1.35;
+    }
+
+    .meta {
+      font-size: 0.73rem;
+      color: #537184;
+      font-family: "JetBrains Mono", monospace;
+    }
+
+    .report-item a {
+      margin-top: 7px;
+      display: inline-block;
+      text-decoration: none;
+      color: var(--orange);
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+
+    .chat-wrap {
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(248, 253, 255, 0.9));
+    }
+
+    .chat-head {
+      margin: 10px 12px 0;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background:
+        radial-gradient(circle at 12% 22%, rgba(10, 132, 214, 0.12), transparent 45%),
+        radial-gradient(circle at 88% 10%, rgba(234, 110, 43, 0.16), transparent 50%),
+        #ffffffde;
+      padding: 12px;
+    }
+
+    .chat-head h4 {
+      margin: 0 0 8px;
+      font-size: 0.92rem;
+      letter-spacing: 0.02em;
+    }
+
+    .quality-row {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .quality-pill {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #fff;
+      padding: 6px 8px;
+      font-size: 0.7rem;
+      color: #35576f;
+      text-align: center;
+      font-family: "JetBrains Mono", monospace;
+    }
+
+    .quality-pill.ok {
+      border-color: rgba(20, 143, 98, 0.35);
+      color: #146646;
+      background: rgba(224, 249, 238, 0.85);
+    }
+
+    .builder {
+      margin: 10px 12px 0;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #ffffffd9;
+      padding: 10px;
+    }
+
+    .builder-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .builder-title {
+      margin: 0;
+      font-size: 0.78rem;
+      color: #47667d;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .builder-badge {
+      font-size: 0.72rem;
+      color: #1f577e;
+      border: 1px solid rgba(10, 132, 214, 0.25);
+      background: rgba(239, 248, 255, 0.9);
+      border-radius: 999px;
+      padding: 4px 8px;
+      font-family: "JetBrains Mono", monospace;
+    }
+
+    .builder-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 1fr 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .builder-field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .builder-field label {
+      font-size: 0.7rem;
+      color: #5a7388;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+    }
+
+    .builder-field input,
+    .builder-field select {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+      border-radius: 10px;
+      padding: 8px 10px;
+      font: inherit;
+      font-size: 0.82rem;
+    }
+
+    .builder-foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.76rem;
+      color: #426378;
+    }
+
+    .toggle input {
+      accent-color: var(--blue);
+      width: 16px;
+      height: 16px;
+    }
+
+    .accuracy-note {
+      font-size: 0.74rem;
+      color: #35576f;
+      font-family: "JetBrains Mono", monospace;
+    }
+
+    .chat-log {
+      flex: 1 1 auto;
+      min-height: 220px;
+      overflow: auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .side-tabs {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .side-tabs button {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: #3e6078;
+      border-radius: 10px;
+      padding: 8px;
+      font: inherit;
+      font-size: 0.76rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .side-tabs button.active {
+      border-color: transparent;
+      color: #fff;
+      background: linear-gradient(135deg, #0a84d6, #165ef0);
+    }
+
+    .side-pane.hidden {
+      display: none;
+    }
+
+    .side-pane-title {
+      margin: 0 0 8px;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #47667d;
+    }
+
+    .system-warning {
+      margin: 10px 12px 0;
+      padding: 10px 12px;
+      border-radius: 11px;
+      border: 1px solid rgba(201, 65, 65, 0.35);
+      background: rgba(255, 234, 234, 0.9);
+      color: #8b1f1f;
+      font-size: 0.82rem;
+      line-height: 1.35;
+    }
+
+    .msg {
+      max-width: 88%;
+      border-radius: 15px;
+      padding: 10px 12px;
+      line-height: 1.42;
+      white-space: pre-wrap;
+      border: 1px solid var(--line);
+      animation: rise 0.22s ease;
+      font-size: 0.9rem;
+      word-break: break-word;
+    }
+
+    .msg.user {
+      align-self: flex-end;
+      border-color: transparent;
+      color: #fff;
+      background: linear-gradient(155deg, #0e6ba8, #2181c1);
+    }
+
+    .msg.bot {
+      align-self: flex-start;
+      background: #fff;
+    }
+
+    .msg .meta {
+      margin-top: 8px;
+      display: block;
+    }
+
+    .composer {
+      border-top: 1px solid var(--line);
+      padding: 12px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      background: #ffffffd9;
+    }
+
+    .composer textarea {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      min-height: 56px;
+      max-height: 160px;
+      resize: vertical;
+      padding: 11px;
+      font: inherit;
+      font-size: 0.9rem;
+      color: var(--ink);
+      background: #fff;
+    }
+
+    .composer button {
+      border: 0;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #0a84d6, #165ef0);
+      color: #fff;
+      font: inherit;
+      font-weight: 600;
+      padding: 0 16px;
+      cursor: pointer;
+      min-width: 100px;
+    }
+
+    .typing {
+      width: fit-content;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: #4d6c80;
+      font-size: 0.78rem;
+      font-family: "JetBrains Mono", monospace;
+      animation: pulse 1s ease infinite;
+    }
+
+    .progress-box {
+      margin: 8px 12px 0;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.86);
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 0.8rem;
+    }
+
+    .progress-title {
+      font-family: "JetBrains Mono", monospace;
+      color: #355a71;
+      margin-bottom: 8px;
+      font-size: 0.76rem;
+    }
+
+    .progress-log {
+      max-height: 190px;
+      overflow: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .progress-item {
+      color: #406176;
+      line-height: 1.3;
+    }
+
+    .progress-item.phase { color: #0a5f9a; font-weight: 600; }
+    .progress-item.done { color: #0f7f54; }
+    .progress-item.error { color: #a02626; }
+
+    .admin-view {
+      height: 100%;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: 12px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .stat {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      padding: 12px;
+    }
+
+    .stat .k {
+      font-size: 1.35rem;
+      font-weight: 700;
+    }
+
+    .stat .l {
+      font-size: 0.78rem;
+      color: #547082;
+      margin-top: 2px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .users-table-wrap {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      overflow: auto;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.84rem;
+      background: #fff;
+    }
+
+    th, td {
+      padding: 10px 12px;
+      border-bottom: 1px solid #e4eef5;
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    th {
+      background: #f0f8ff;
+      color: #426478;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .empty {
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-style: italic;
+      padding: 4px 0;
+    }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0% { opacity: 0.4; }
+      50% { opacity: 1; }
+      100% { opacity: 0.4; }
+    }
+
+    @media (max-width: 1180px) {
+      .workspace {
+        grid-template-columns: 280px 1fr;
+      }
+      .stats-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 920px) {
+      .shell { padding: 10px; }
+      .topbar {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+      .tabset { justify-content: flex-start; }
+      .workspace {
+        grid-template-columns: 1fr;
+      }
+      .left-col { max-height: 34vh; }
+      .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .quality-row { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .builder-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 640px) {
+      .stats-grid { grid-template-columns: 1fr; }
+      .composer {
+        grid-template-columns: 1fr;
+      }
+      .composer button {
+        min-height: 42px;
+      }
+      .quality-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .builder-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="grain"></div>
+  <div class="shell">
+    <section id="auth-view" class="auth-wrap">
+      <div class="auth-card">
+        <h1 class="auth-title">Stock Intelligence Studio</h1>
+        <p class="auth-sub">Chat with the multi-agent analyst, generate PDFs, and track history securely.</p>
+        <div class="switch">
+          <button id="login-tab" class="active" type="button">Login</button>
+          <button id="register-tab" type="button">Register</button>
+        </div>
+        <form id="auth-form">
+          <div class="field">
+            <input id="auth-username" type="text" placeholder="Username" autocomplete="username" required>
+          </div>
+          <div class="field">
+            <input id="auth-password" type="password" placeholder="Password (min 8 chars)" autocomplete="current-password" required>
+          </div>
+          <button id="auth-submit" class="auth-action" type="submit">Login</button>
+          <div id="auth-error" class="error hidden"></div>
+        </form>
+        <div class="hint">
+          Admin login is enabled. Default bootstrap account can be `admin / admin123` unless changed via env.
+        </div>
+      </div>
+    </section>
+
+    <section id="app-view" class="app hidden">
+      <header class="topbar">
+        <div class="brand">Stock Intelligence Studio</div>
+        <div id="user-pill" class="pill"></div>
+        <nav class="tabset">
+          <button id="tab-chat" class="active" type="button">Chat Workspace</button>
+          <button id="tab-admin" type="button" class="hidden">Admin Panel</button>
+        </nav>
+        <button id="logout-btn" class="logout" type="button">Logout</button>
+      </header>
+
+      <section id="chat-section" class="workspace">
+        <aside class="panel left-col">
+          <h3>Workspace Sidebar</h3>
+          <div class="panel-body">
+            <div class="side-tabs">
+              <button id="side-tab-prompts" class="active" type="button">Prompts</button>
+              <button id="side-tab-chats" type="button">Chats</button>
+              <button id="side-tab-reports" type="button">Reports</button>
+            </div>
+            <div id="side-pane-prompts" class="side-pane">
+              <p class="side-pane-title">Prompt Ideas</p>
+              <div id="prompt-chips" class="chips"></div>
+            </div>
+            <div id="side-pane-chats" class="side-pane hidden">
+              <p class="side-pane-title">Previous Chats</p>
+              <div id="history-list"></div>
+            </div>
+            <div id="side-pane-reports" class="side-pane hidden">
+              <p class="side-pane-title">Generated Reports</p>
+              <div id="report-list"></div>
+            </div>
+          </div>
+        </aside>
+
+        <main class="panel chat-wrap">
+          <div class="chat-head">
+            <h4>Live Multi-Agent Report Console</h4>
+            <div class="quality-row">
+              <div id="pill-symbol" class="quality-pill">Symbol: --</div>
+              <div id="pill-live" class="quality-pill">Live data: --</div>
+              <div id="pill-citations" class="quality-pill">Citations: --</div>
+              <div id="pill-risk" class="quality-pill">Risk profile: --</div>
+              <div id="pill-horizon" class="quality-pill">Horizon: --</div>
+            </div>
+          </div>
+          <div class="builder">
+            <div class="builder-head">
+              <p class="builder-title">Accuracy Builder</p>
+              <span id="builder-health" class="builder-badge">Health check pending</span>
+            </div>
+            <div class="builder-grid">
+              <div class="builder-field">
+                <label for="cfg-symbol">Stock Symbol</label>
+                <input id="cfg-symbol" type="text" placeholder="e.g., RELIANCE" maxlength="18">
+              </div>
+              <div class="builder-field">
+                <label for="cfg-horizon">Investment Horizon</label>
+                <select id="cfg-horizon">
+                  <option value="swing">Swing (1-4 weeks)</option>
+                  <option value="medium" selected>Medium-term (1-6 months)</option>
+                  <option value="long">Long-term (6m+)</option>
+                </select>
+              </div>
+              <div class="builder-field">
+                <label for="cfg-risk">Risk Profile</label>
+                <select id="cfg-risk">
+                  <option value="conservative" selected>Conservative</option>
+                  <option value="balanced">Balanced</option>
+                  <option value="aggressive">Aggressive</option>
+                </select>
+              </div>
+              <div class="builder-field">
+                <label for="cfg-style">Report Style</label>
+                <select id="cfg-style">
+                  <option value="decision">Decision-first</option>
+                  <option value="technical">Technical-heavy</option>
+                  <option value="fundamental">Fundamental-heavy</option>
+                  <option value="trader">Trader playbook</option>
+                </select>
+              </div>
+            </div>
+            <div class="builder-foot">
+              <label class="toggle">
+                <input id="cfg-deep" type="checkbox" checked>
+                Include Exa deep research + citation links
+              </label>
+              <div id="accuracy-note" class="accuracy-note">Waiting for prompt...</div>
+            </div>
+          </div>
+          <div id="system-warning" class="system-warning hidden"></div>
+          <div id="progress-box" class="progress-box hidden">
+            <div id="progress-title" class="progress-title">Pipeline idle</div>
+            <div id="progress-log" class="progress-log"></div>
+          </div>
+          <div id="chat-log" class="chat-log"></div>
+          <form id="chat-form" class="composer">
+            <textarea id="chat-input" placeholder="Ask for a report. Example: 'Create a swing-trade report for RELIANCE with entry, target and stop loss.'" required></textarea>
+            <button id="send-btn" type="submit">Generate Report</button>
+          </form>
+        </main>
+
+      </section>
+
+      <section id="admin-section" class="admin-view hidden">
+        <div class="stats-grid" id="stats-grid">
+          <article class="stat"><div class="k" id="s-users">0</div><div class="l">Users</div></article>
+          <article class="stat"><div class="k" id="s-admins">0</div><div class="l">Admins</div></article>
+          <article class="stat"><div class="k" id="s-reports">0</div><div class="l">Reports</div></article>
+          <article class="stat"><div class="k" id="s-chats">0</div><div class="l">Chats</div></article>
+          <article class="stat"><div class="k" id="s-active">0</div><div class="l">Active (7d)</div></article>
+        </div>
+        <div class="users-table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Role</th>
+                <th>Reports</th>
+                <th>Chats</th>
+                <th>Created</th>
+                <th>Last Login</th>
+              </tr>
+            </thead>
+            <tbody id="admin-users-body"></tbody>
+          </table>
+        </div>
+      </section>
+    </section>
+  </div>
+
+  <script>
+    const state = {
+      authMode: "login",
+      user: null,
+      isAdmin: false,
+      typingNode: null,
+      openaiKeySet: true,
+      exaConfigured: false,
+      activeJobId: null,
+      pollTimer: null,
+      lastEventCount: 0,
+    };
+
+    const authView = document.getElementById("auth-view");
+    const appView = document.getElementById("app-view");
+    const authForm = document.getElementById("auth-form");
+    const loginTab = document.getElementById("login-tab");
+    const registerTab = document.getElementById("register-tab");
+    const authSubmit = document.getElementById("auth-submit");
+    const authError = document.getElementById("auth-error");
+    const authUsername = document.getElementById("auth-username");
+    const authPassword = document.getElementById("auth-password");
+
+    const userPill = document.getElementById("user-pill");
+    const logoutBtn = document.getElementById("logout-btn");
+    const tabChat = document.getElementById("tab-chat");
+    const tabAdmin = document.getElementById("tab-admin");
+    const chatSection = document.getElementById("chat-section");
+    const adminSection = document.getElementById("admin-section");
+    const chatLog = document.getElementById("chat-log");
+    const progressBox = document.getElementById("progress-box");
+    const progressTitle = document.getElementById("progress-title");
+    const progressLog = document.getElementById("progress-log");
+    const systemWarning = document.getElementById("system-warning");
+    const builderHealth = document.getElementById("builder-health");
+    const cfgSymbol = document.getElementById("cfg-symbol");
+    const cfgHorizon = document.getElementById("cfg-horizon");
+    const cfgRisk = document.getElementById("cfg-risk");
+    const cfgStyle = document.getElementById("cfg-style");
+    const cfgDeep = document.getElementById("cfg-deep");
+    const accuracyNote = document.getElementById("accuracy-note");
+    const pillSymbol = document.getElementById("pill-symbol");
+    const pillLive = document.getElementById("pill-live");
+    const pillCitations = document.getElementById("pill-citations");
+    const pillRisk = document.getElementById("pill-risk");
+    const pillHorizon = document.getElementById("pill-horizon");
+    const chatForm = document.getElementById("chat-form");
+    const chatInput = document.getElementById("chat-input");
+    const sendBtn = document.getElementById("send-btn");
+    const sideTabPrompts = document.getElementById("side-tab-prompts");
+    const sideTabChats = document.getElementById("side-tab-chats");
+    const sideTabReports = document.getElementById("side-tab-reports");
+    const sidePanePrompts = document.getElementById("side-pane-prompts");
+    const sidePaneChats = document.getElementById("side-pane-chats");
+    const sidePaneReports = document.getElementById("side-pane-reports");
+    const promptChips = document.getElementById("prompt-chips");
+    const historyList = document.getElementById("history-list");
+    const reportList = document.getElementById("report-list");
+
+    const sUsers = document.getElementById("s-users");
+    const sAdmins = document.getElementById("s-admins");
+    const sReports = document.getElementById("s-reports");
+    const sChats = document.getElementById("s-chats");
+    const sActive = document.getElementById("s-active");
+    const adminUsersBody = document.getElementById("admin-users-body");
+
+    function fmtDate(ts) {
+      if (!ts) return "-";
+      const d = new Date(ts);
+      if (Number.isNaN(d.getTime())) return ts;
+      return d.toLocaleString();
+    }
+
+    function normalizeSymbol(raw = "") {
+      const match = String(raw || "").toUpperCase().trim().match(/[A-Z0-9.]{2,12}/);
+      if (!match) return "";
+      return match[0].replace(/\.NS$|\.BO$/, "");
+    }
+
+    function guessSymbol(text = "") {
+      const upper = (text || "").toUpperCase();
+      const explicit = upper.match(/\b([A-Z]{2,12})(?:\.NS|\.BO)?\b/);
+      if (!explicit) return "";
+      const blocked = new Set([
+        "BUY", "SELL", "HOLD", "REPORT", "NSE", "BSE", "PDF", "WITH", "STOP", "LOSS", "TARGET",
+        "CREATE", "ANALYZE", "ANALYSIS", "GENERATE", "SWING", "TRADE", "SHOULD", "ENTRY", "RISK",
+        "MEDIUM", "LONG", "SHORT", "CONSERVATIVE", "AGGRESSIVE"
+      ]);
+      return blocked.has(explicit[1]) ? "" : explicit[1];
+    }
+
+    function markPill(node, ok) {
+      node.classList.toggle("ok", !!ok);
+    }
+
+    function updateQualityUi() {
+      const sym = normalizeSymbol(cfgSymbol.value || guessSymbol(chatInput.value));
+      pillSymbol.textContent = `Symbol: ${sym || "--"}`;
+      pillRisk.textContent = `Risk: ${cfgRisk.value}`;
+      pillHorizon.textContent = `Horizon: ${cfgHorizon.value}`;
+      pillLive.textContent = `Live data: ${state.exaConfigured ? "Exa ON" : "Fallback mode"}`;
+      pillCitations.textContent = `Citations: ${cfgDeep.checked ? "Required" : "Standard"}`;
+
+      markPill(pillSymbol, !!sym);
+      markPill(pillRisk, true);
+      markPill(pillHorizon, true);
+      markPill(pillLive, state.exaConfigured);
+      markPill(pillCitations, cfgDeep.checked);
+
+      if (!sym) {
+        accuracyNote.textContent = "Tip: Add a valid stock symbol (e.g., RELIANCE, ITC, TCS) for higher accuracy.";
+      } else {
+        accuracyNote.textContent = `Ready: ${sym} | ${cfgRisk.value} | ${cfgHorizon.value} | ${cfgDeep.checked ? "deep research on" : "deep research off"}.`;
+      }
+    }
+
+    function buildRequestPrompt(userText) {
+      const symbol = normalizeSymbol(cfgSymbol.value || guessSymbol(userText));
+      if (!symbol) {
+        throw new Error("Please provide a stock symbol (example: RELIANCE or ITC).");
+      }
+
+      const horizonMap = {
+        swing: "Swing (1-4 weeks)",
+        medium: "Medium-term (1-6 months)",
+        long: "Long-term (6+ months)",
+      };
+
+      return [
+        `Create an investor-grade stock report for ${symbol}.`,
+        `Risk profile: ${cfgRisk.value}.`,
+        `Investment horizon: ${horizonMap[cfgHorizon.value] || cfgHorizon.value}.`,
+        `Report style: ${cfgStyle.value}.`,
+        `Use live market data and ${cfgDeep.checked ? "Exa deep research with source citations" : "Exa web research with source citations"}.`,
+        "Output must include: BUY/SELL/HOLD, confidence score, entry price, target(s), stop-loss, risk-reward, and key catalysts/risks.",
+        `User context: ${userText}`,
+      ].join("\n");
+    }
+
+    async function api(path, options = {}) {
+      const res = await fetch(path, options);
+      const contentType = res.headers.get("content-type") || "";
+      const data = contentType.includes("application/json") ? await res.json() : {};
+      if (!res.ok) {
+        const message = data.error || "Request failed";
+        throw new Error(message);
+      }
+      return data;
+    }
+
+    function setAuthMode(mode) {
+      state.authMode = mode;
+      const isLogin = mode === "login";
+      loginTab.classList.toggle("active", isLogin);
+      registerTab.classList.toggle("active", !isLogin);
+      authSubmit.textContent = isLogin ? "Login" : "Create Account";
+      authPassword.setAttribute("autocomplete", isLogin ? "current-password" : "new-password");
+      authError.classList.add("hidden");
+    }
+
+    function setSidePane(which = "prompts") {
+      const tabs = [
+        { btn: sideTabPrompts, pane: sidePanePrompts, key: "prompts" },
+        { btn: sideTabChats, pane: sidePaneChats, key: "chats" },
+        { btn: sideTabReports, pane: sidePaneReports, key: "reports" },
+      ];
+      tabs.forEach((t) => {
+        const active = t.key === which;
+        t.btn.classList.toggle("active", active);
+        t.pane.classList.toggle("hidden", !active);
+      });
+    }
+
+    function showAuth(message = "") {
+      appView.classList.add("hidden");
+      authView.classList.remove("hidden");
+      if (message) {
+        authError.textContent = message;
+        authError.classList.remove("hidden");
+      }
+    }
+
+    function showApp(user) {
+      state.user = user;
+      state.isAdmin = user.role === "admin";
+      userPill.textContent = `${user.username} | ${user.role}`;
+      tabAdmin.classList.toggle("hidden", !state.isAdmin);
+      authView.classList.add("hidden");
+      appView.classList.remove("hidden");
+    }
+
+    function addMessage(role, text, meta = "", pdfUrl = "") {
+      const node = document.createElement("article");
+      node.className = `msg ${role === "user" ? "user" : "bot"}`;
+      node.textContent = text;
+      if (meta) {
+        const m = document.createElement("span");
+        m.className = "meta";
+        m.textContent = meta;
+        node.appendChild(m);
+      }
+      if (pdfUrl) {
+        const link = document.createElement("a");
+        link.href = pdfUrl;
+        link.target = "_blank";
+        link.rel = "noopener";
+        link.textContent = "Open PDF report";
+        link.style.display = "inline-block";
+        link.style.marginTop = "8px";
+        link.style.fontSize = "0.82rem";
+        link.style.fontWeight = "700";
+        link.style.color = "#d77242";
+        node.appendChild(link);
+      }
+      chatLog.appendChild(node);
+      chatLog.scrollTop = chatLog.scrollHeight;
+      return node;
+    }
+
+    function setSystemWarning(message = "", hardBlock = false) {
+      const hasWarning = Boolean(message);
+      systemWarning.classList.toggle("hidden", !hasWarning);
+      if (hasWarning) {
+        systemWarning.textContent = message;
+      } else {
+        systemWarning.textContent = "";
+      }
+      chatInput.disabled = !!hardBlock;
+      sendBtn.disabled = !!hardBlock;
+    }
+
+    function setTyping(on) {
+      if (on && !state.typingNode) {
+        const t = document.createElement("div");
+        t.className = "typing";
+        t.textContent = "Running multi-agent analysis and drafting your report...";
+        chatLog.appendChild(t);
+        chatLog.scrollTop = chatLog.scrollHeight;
+        state.typingNode = t;
+      }
+      if (!on && state.typingNode) {
+        state.typingNode.remove();
+        state.typingNode = null;
+      }
+    }
+
+    function resetProgressUi() {
+      state.activeJobId = null;
+      state.lastEventCount = 0;
+      if (state.pollTimer) {
+        clearInterval(state.pollTimer);
+        state.pollTimer = null;
+      }
+      progressTitle.textContent = "Pipeline idle";
+      progressLog.innerHTML = "";
+      progressBox.classList.add("hidden");
+    }
+
+    function addProgressItem(text) {
+      const row = document.createElement("div");
+      row.className = "progress-item";
+      row.textContent = text;
+      const t = (text || "").toLowerCase();
+      if (t.includes("phase")) row.classList.add("phase");
+      if (t.includes("complete") || t.includes("generated")) row.classList.add("done");
+      if (t.includes("error") || t.includes("failed")) row.classList.add("error");
+      progressLog.appendChild(row);
+      progressLog.scrollTop = progressLog.scrollHeight;
+    }
+
+    function showProgress(message) {
+      progressBox.classList.remove("hidden");
+      progressTitle.textContent = message || "Running analysis...";
+    }
+
+    async function pollJobStatus() {
+      if (!state.activeJobId) return;
+      try {
+        const data = await api(`/api/chat/status?job_id=${encodeURIComponent(state.activeJobId)}`);
+        showProgress(data.current_message || "Running analysis...");
+
+        const events = data.events || [];
+        if (events.length > state.lastEventCount) {
+          for (let i = state.lastEventCount; i < events.length; i += 1) {
+            addProgressItem(events[i].message || events[i].step || events[i].stage || "update");
+          }
+          state.lastEventCount = events.length;
+        }
+
+        if (data.status === "done") {
+          resetProgressUi();
+          setTyping(false);
+          sendBtn.disabled = false;
+          const result = data.result || {};
+          const meta = [
+            result.stock_symbol || "",
+            result.recommendation ? `rec=${result.recommendation}` : "",
+            Number.isInteger(result.confidence) ? `conf=${result.confidence}%` : "",
+          ].filter(Boolean).join(" | ");
+          addMessage("bot", result.analysis || "Analysis complete.", meta, result.pdf_url || "");
+          await refreshSidebarData();
+          setSidePane("reports");
+          if (state.isAdmin) await refreshAdmin();
+          chatInput.focus();
+          return;
+        }
+
+        if (data.status === "failed") {
+          resetProgressUi();
+          setTyping(false);
+          sendBtn.disabled = false;
+          addMessage("bot", `Error: ${data.error || "Analysis failed"}`);
+          setSidePane("chats");
+          chatInput.focus();
+        }
+      } catch (err) {
+        resetProgressUi();
+        setTyping(false);
+        sendBtn.disabled = false;
+        addMessage("bot", `Error while tracking progress: ${err.message}`);
+      }
+    }
+
+    function renderHistory(items) {
+      historyList.innerHTML = "";
+      if (!items.length) {
+        historyList.innerHTML = `<div class="empty">No chat history yet.</div>`;
+        return;
+      }
+      items.forEach((item) => {
+        const div = document.createElement("div");
+        div.className = "history-item";
+        div.innerHTML = `
+          <div class="title">${item.prompt}</div>
+          <div class="meta">${item.stock_symbol || "-"} | ${item.recommendation || "-"} ${item.confidence ? `(${item.confidence}%)` : ""}</div>
+          <div class="meta">${fmtDate(item.created_at)}</div>
+        `;
+        div.addEventListener("click", () => {
+          chatInput.value = item.prompt;
+          const guessed = normalizeSymbol(item.stock_symbol || guessSymbol(item.prompt));
+          if (guessed) cfgSymbol.value = guessed;
+          updateQualityUi();
+          chatInput.focus();
+        });
+        historyList.appendChild(div);
+      });
+    }
+
+    function renderReports(items) {
+      reportList.innerHTML = "";
+      if (!items.length) {
+        reportList.innerHTML = `<div class="empty">No reports generated yet.</div>`;
+        return;
+      }
+      items.forEach((item) => {
+        const div = document.createElement("div");
+        div.className = "report-item";
+        div.innerHTML = `
+          <div class="title">${item.stock_symbol || "N/A"} | ${item.recommendation || "N/A"} ${item.confidence ? `(${item.confidence}%)` : ""}</div>
+          <div class="meta">${fmtDate(item.created_at)} ${item.owner ? `| ${item.owner}` : ""}</div>
+          <a href="${item.url}" target="_blank" rel="noopener">${item.filename}</a>
+        `;
+        reportList.appendChild(div);
+      });
+    }
+
+    function renderChips(items) {
+      promptChips.innerHTML = "";
+      items.forEach((text) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "chip";
+        btn.textContent = text.length > 70 ? `${text.slice(0, 67)}...` : text;
+        btn.title = text;
+        btn.addEventListener("click", () => {
+          chatInput.value = text;
+          const guessed = guessSymbol(text);
+          if (guessed) cfgSymbol.value = guessed;
+          updateQualityUi();
+          chatInput.focus();
+        });
+        promptChips.appendChild(btn);
+      });
+    }
+
+    async function refreshSidebarData() {
+      const [chats, reports] = await Promise.all([
+        api("/api/chats"),
+        api("/api/reports"),
+      ]);
+      renderHistory(chats.items || []);
+      renderReports(reports.items || []);
+    }
+
+    async function refreshPromptExamples() {
+      try {
+        const data = await api("/api/prompt-examples");
+        renderChips(data.items || []);
+      } catch {
+        renderChips([
+          "Create a full report for RELIANCE with stop loss and target.",
+          "I hold INFY from 1450. Should I hold or reduce?",
+          "Compare TCS and HCLTECH for long-term buy.",
+        ]);
+      }
+    }
+
+    async function refreshAdmin() {
+      if (!state.isAdmin) return;
+      const [statsData, usersData] = await Promise.all([
+        api("/api/admin/stats"),
+        api("/api/admin/users"),
+      ]);
+      const s = statsData.stats || {};
+      sUsers.textContent = s.total_users ?? 0;
+      sAdmins.textContent = s.total_admins ?? 0;
+      sReports.textContent = s.total_reports ?? 0;
+      sChats.textContent = s.total_chats ?? 0;
+      sActive.textContent = s.active_users_7d ?? 0;
+
+      adminUsersBody.innerHTML = "";
+      (usersData.items || []).forEach((u) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${u.id}</td>
+          <td>${u.username}</td>
+          <td>${u.role}</td>
+          <td>${u.reports_count}</td>
+          <td>${u.chats_count}</td>
+          <td>${fmtDate(u.created_at)}</td>
+          <td>${fmtDate(u.last_login)}</td>
+        `;
+        adminUsersBody.appendChild(tr);
+      });
+    }
+
+    async function refreshSystemHealth() {
+      try {
+        const health = await api("/health");
+        state.openaiKeySet = !!health.openai_key_set;
+        state.exaConfigured = !!health.exa_mcp_configured;
+        builderHealth.textContent = state.exaConfigured ? "Exa live research connected" : "Exa not configured";
+        if (!state.openaiKeySet) {
+          setSystemWarning("OPENAI_API_KEY is missing on the server. Set it in .env or environment and restart web_server.py.", true);
+        } else {
+          setSystemWarning(state.exaConfigured ? "" : "Exa MCP is not configured. Reports still run, but live research depth is reduced.");
+        }
+        updateQualityUi();
+      } catch {
+        state.openaiKeySet = false;
+        state.exaConfigured = false;
+        builderHealth.textContent = "Health check failed";
+        setSystemWarning("Unable to verify server health. Please refresh or restart the server.", true);
+        updateQualityUi();
+      }
+    }
+
+    async function boot() {
+      try {
+        const me = await api("/api/me");
+        if (me.authenticated) {
+          showApp(me.user);
+          addMessage("bot", "Welcome back. Ask for analysis and I will generate a PDF report.");
+          await Promise.all([refreshPromptExamples(), refreshSidebarData(), refreshAdmin(), refreshSystemHealth()]);
+          return;
+        }
+      } catch {}
+      showAuth();
+    }
+
+    loginTab.addEventListener("click", () => setAuthMode("login"));
+    registerTab.addEventListener("click", () => setAuthMode("register"));
+
+    authForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      authError.classList.add("hidden");
+
+      const username = authUsername.value.trim();
+      const password = authPassword.value.trim();
+      const endpoint = state.authMode === "login" ? "/api/login" : "/api/register";
+
+      try {
+        const data = await api(endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password }),
+        });
+        showApp(data.user);
+        chatLog.innerHTML = "";
+        addMessage("bot", "Session started. Try one of the prompt ideas on the left.");
+        await Promise.all([refreshPromptExamples(), refreshSidebarData(), refreshAdmin(), refreshSystemHealth()]);
+        authForm.reset();
+      } catch (err) {
+        authError.textContent = err.message;
+        authError.classList.remove("hidden");
+      }
+    });
+
+    logoutBtn.addEventListener("click", async () => {
+      try { await api("/api/logout", { method: "POST" }); } catch {}
+      resetProgressUi();
+      state.user = null;
+      state.isAdmin = false;
+      chatLog.innerHTML = "";
+      showAuth();
+    });
+
+    chatForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (!state.openaiKeySet) {
+        addMessage("bot", "Cannot run analysis: OPENAI_API_KEY is not configured on the server.");
+        return;
+      }
+      const text = chatInput.value.trim();
+      if (!text) return;
+
+      let requestPrompt = "";
+      let symbolForMeta = "";
+      try {
+        requestPrompt = buildRequestPrompt(text);
+        symbolForMeta = normalizeSymbol(cfgSymbol.value || guessSymbol(text));
+      } catch (err) {
+        addMessage("bot", `Input check: ${err.message}`);
+        chatInput.focus();
+        return;
+      }
+
+      const meta = [
+        symbolForMeta ? `symbol=${symbolForMeta}` : "",
+        `risk=${cfgRisk.value}`,
+        `horizon=${cfgHorizon.value}`,
+        cfgDeep.checked ? "deep=on" : "deep=off",
+      ].filter(Boolean).join(" | ");
+
+      addMessage("user", text, meta);
+      chatInput.value = "";
+      sendBtn.disabled = true;
+      setTyping(true);
+      resetProgressUi();
+      updateQualityUi();
+
+      try {
+        const data = await api("/api/chat/start", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: requestPrompt }),
+        });
+        state.activeJobId = data.job_id;
+        showProgress(`Job ${data.job_id.slice(0, 8)} is running...`);
+        addProgressItem(`Detected symbol: ${data.stock_symbol || "N/A"}`);
+        state.pollTimer = setInterval(pollJobStatus, 1800);
+        await pollJobStatus();
+      } catch (err) {
+        resetProgressUi();
+        setTyping(false);
+        addMessage("bot", `Error: ${err.message}`);
+        sendBtn.disabled = false;
+      } finally {
+        if (!state.activeJobId) {
+          sendBtn.disabled = false;
+          chatInput.focus();
+        }
+      }
+    });
+
+    tabChat.addEventListener("click", () => {
+      tabChat.classList.add("active");
+      tabAdmin.classList.remove("active");
+      chatSection.classList.remove("hidden");
+      adminSection.classList.add("hidden");
+    });
+
+    tabAdmin.addEventListener("click", async () => {
+      tabAdmin.classList.add("active");
+      tabChat.classList.remove("active");
+      adminSection.classList.remove("hidden");
+      chatSection.classList.add("hidden");
+      try {
+        await refreshAdmin();
+      } catch (err) {
+        alert(`Admin refresh failed: ${err.message}`);
+      }
+    });
+
+    sideTabPrompts.addEventListener("click", () => setSidePane("prompts"));
+    sideTabChats.addEventListener("click", () => setSidePane("chats"));
+    sideTabReports.addEventListener("click", () => setSidePane("reports"));
+
+    [cfgSymbol, cfgHorizon, cfgRisk, cfgStyle, cfgDeep, chatInput].forEach((el) => {
+      const eventName = el.tagName === "SELECT" || el.type === "checkbox" ? "change" : "input";
+      el.addEventListener(eventName, updateQualityUi);
+    });
+
+    setSidePane("prompts");
+    updateQualityUi();
+    boot();
+  </script>
+</body>
+</html>

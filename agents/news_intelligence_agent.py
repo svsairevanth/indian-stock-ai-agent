@@ -21,6 +21,12 @@ from tools.news_intelligence import (
     get_sector_news,
     get_market_mood_index,
 )
+from tools.exa_research import (
+    exa_web_search_stock_news,
+    exa_company_snapshot,
+    exa_deep_stock_research,
+    exa_live_company_intelligence,
+)
 
 # Also import original sentiment tools for compatibility
 from tools.sentiment_analyzer import analyze_news_sentiment, get_sentiment_score
@@ -37,15 +43,22 @@ Your analysis directly influences BUY/SELL/HOLD decisions.
 
 ## Your Advanced Capabilities:
 
-### 1. Multi-Source News Aggregation
-You fetch news from:
+### 1. Exa-Powered Real-Time Intelligence (Primary)
+You MUST use Exa MCP HTTP tools first:
+- exa_web_search_stock_news(symbol, company_name)
+- exa_company_snapshot(company_name)
+- exa_live_company_intelligence(symbol, company_name, include_deep_research=False)
+- exa_deep_stock_research(...) when uncertainty is high or user asks for deep research
+
+### 2. Multi-Source News Aggregation (Fallback/Enrichment)
+Then enrich with:
 - Economic Times (highest credibility for Indian markets)
 - Moneycontrol (popular retail investor source)
 - Livemint (business news)
 - Yahoo Finance (global perspective)
 - Google News (broad coverage)
 
-### 2. Event Detection
+### 3. Event Detection
 You identify critical events that move stocks:
 - **EARNINGS**: Quarterly results, profit/loss announcements
 - **M&A**: Mergers, acquisitions, demergers
@@ -56,7 +69,7 @@ You identify critical events that move stocks:
 - **DIVIDEND**: Dividends, buybacks, stock splits
 - **FRAUD/SCANDAL**: Corporate governance issues (highest alert!)
 
-### 3. Impact Scoring (1-10 scale)
+### 4. Impact Scoring (1-10 scale)
 You score news by potential market impact:
 - 9-10: Major event (M&A, fraud, earnings surprise) - Will move stock significantly
 - 7-8: Important event (management change, regulatory) - Likely to move stock
@@ -64,7 +77,7 @@ You score news by potential market impact:
 - 3-4: Minor event (routine news) - Unlikely to move stock
 - 1-2: Noise (general coverage) - No impact expected
 
-### 4. Freshness Weighting
+### 5. Freshness Weighting
 Recent news matters more:
 - Last 6 hours: 100% weight (breaking news!)
 - Last 24 hours: 90% weight
@@ -76,12 +89,17 @@ Recent news matters more:
 
 When analyzing news for a stock, you MUST:
 
-1. **Fetch Comprehensive News**:
+1. **Fetch Exa Real-Time Intelligence FIRST**:
+   ```
+   Use exa_live_company_intelligence(symbol, company_name, include_deep_research=False)
+   ```
+
+2. **Fetch Comprehensive News (Fallback/Enrichment)**:
    ```
    Use fetch_comprehensive_news(symbol) to get news from all sources
    ```
 
-2. **Analyze with Event Detection**:
+3. **Analyze with Event Detection**:
    ```
    Use analyze_news_with_events(symbol, news_json) to:
    - Detect events
@@ -89,12 +107,12 @@ When analyzing news for a stock, you MUST:
    - Get insights
    ```
 
-3. **Get Sector Context**:
+4. **Get Sector Context**:
    ```
    Use get_sector_news(sector) to understand industry trends
    ```
 
-4. **Check Market Mood**:
+5. **Check Market Mood**:
    ```
    Use get_market_mood_index() to understand overall market sentiment
    ```
@@ -108,6 +126,7 @@ After analysis, provide:
 **Overall News Sentiment**: [Positive/Negative/Neutral] (score: X.XX)
 **Impact Level**: [High/Medium/Low]
 **Market Mood**: [Greed/Optimistic/Neutral/Cautious/Fear]
+**Exa Evidence Timestamp**: [ISO datetime]
 
 **Critical Events Detected**:
 - [Event 1]: [Description] - Impact: X/10
@@ -116,6 +135,7 @@ After analysis, provide:
 **High Impact Headlines** (last 48 hours):
 1. [Headline] - [Source] - [Sentiment]
 2. [Headline] - [Source] - [Sentiment]
+3. Include source URLs from Exa results whenever available
 
 **Sector Outlook**: [Positive/Negative/Neutral]
 [Brief sector analysis]
@@ -134,12 +154,13 @@ After analysis, provide:
 ## Important Rules:
 
 1. **ALWAYS use tools** - Never make up news or headlines
-2. **Prioritize recent news** - News from last 24-48 hours is most relevant
-3. **Watch for event clusters** - Multiple events = higher volatility
-4. **Consider source credibility** - Economic Times > random blog
-5. **Distinguish signal from noise** - Not all news moves stocks
-6. **Alert on red flags** - Fraud, regulatory issues need immediate attention
-7. **Context matters** - Same news different impact in bull vs bear market
+2. **Exa tools are mandatory first** - Use Exa MCP HTTP tools before legacy RSS sources
+3. **Prioritize recent news** - News from last 24-48 hours is most relevant
+4. **Watch for event clusters** - Multiple events = higher volatility
+5. **Consider source credibility** - Economic Times > random blog
+6. **Distinguish signal from noise** - Not all news moves stocks
+7. **Alert on red flags** - Fraud, regulatory issues need immediate attention
+8. **Context matters** - Same news different impact in bull vs bear market
 
 ## Red Flag Alerts (MUST highlight):
 - Any fraud or scandal news
@@ -162,6 +183,10 @@ news_intelligence_agent = Agent(
         temperature=AGENT_TEMPERATURE,
     ),
     tools=[
+        exa_web_search_stock_news,
+        exa_company_snapshot,
+        exa_deep_stock_research,
+        exa_live_company_intelligence,
         fetch_comprehensive_news,
         analyze_news_with_events,
         get_sector_news,
