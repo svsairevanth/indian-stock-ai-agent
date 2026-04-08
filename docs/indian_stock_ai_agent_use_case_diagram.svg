@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="780" height="920" viewBox="0 0 780 920">
+<defs>
+<linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+<stop offset="0%" stop-color="#ffffff"/>
+<stop offset="100%" stop-color="#f4f8fc"/>
+</linearGradient>
+<marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+<path d="M 0 0 L 10 5 L 0 10 z" fill="#9aa8b5"/>
+</marker>
+</defs>
+<rect x="0" y="0" width="780" height="920" fill="url(#bg)"/>
+<text x="18" y="26" font-family="Segoe UI Semibold, Arial, sans-serif" font-size="18" fill="#1f2e3a">Use Case</text>
+<rect x="20" y="18" width="700" height="270" rx="22" ry="22" fill="none" stroke="#b1bfce" stroke-width="2" stroke-dasharray="10 8"/>
+<rect x="20" y="310" width="700" height="210" rx="22" ry="22" fill="none" stroke="#b1bfce" stroke-width="2" stroke-dasharray="10 8"/>
+<rect x="20" y="540" width="700" height="370" rx="22" ry="22" fill="none" stroke="#b1bfce" stroke-width="2" stroke-dasharray="10 8"/>
+<text x="28" y="298" font-family="Segoe UI Semibold, Arial, sans-serif" font-size="14" fill="#4e5f71">Application</text>
+<text x="28" y="318" font-family="Segoe UI Semibold, Arial, sans-serif" font-size="14" fill="#4e5f71">Access + Auth</text>
+<text x="28" y="530" font-family="Segoe UI Semibold, Arial, sans-serif" font-size="14" fill="#4e5f71">Core Analysis Flow</text>
+<text x="28" y="544" font-family="Segoe UI Semibold, Arial, sans-serif" font-size="14" fill="#4e5f71">and Report Output</text>
+<text x="30" y="778" text-anchor="middle" font-family="Segoe UI Semibold, Arial, sans-serif" font-size="15" fill="#5c6773">Platform Admin</text>
+<circle cx="30" cy="792" r="9" fill="none" stroke="#5c6773" stroke-width="2"/>
+<line x1="30" y1="801" x2="30" y2="834" stroke="#5c6773" stroke-width="2"/>
+<line x1="14" y1="814" x2="46" y2="814" stroke="#5c6773" stroke-width="2"/>
+<line x1="30" y1="834" x2="17" y2="857" stroke="#5c6773" stroke-width="2"/>
+<line x1="30" y1="834" x2="43" y2="857" stroke="#5c6773" stroke-width="2"/>
+<text x="728" y="778" text-anchor="middle" font-family="Segoe UI Semibold, Arial, sans-serif" font-size="15" fill="#5c6773">Remote User</text>
+<circle cx="728" cy="792" r="9" fill="none" stroke="#5c6773" stroke-width="2"/>
+<line x1="728" y1="801" x2="728" y2="834" stroke="#5c6773" stroke-width="2"/>
+<line x1="712" y1="814" x2="744" y2="814" stroke="#5c6773" stroke-width="2"/>
+<line x1="728" y1="834" x2="715" y2="857" stroke="#5c6773" stroke-width="2"/>
+<line x1="728" y1="834" x2="741" y2="857" stroke="#5c6773" stroke-width="2"/>
+<path d="M 70,802 L 70,424 L 178,424 L 178,47" fill="none" stroke="#99a8b4" stroke-width="2.2" stroke-dasharray="7 6" marker-end="url(#arrow)"/>
+<path d="M 70,802 L 70,470 L 132,470 L 132,139" fill="none" stroke="#99a8b4" stroke-width="2.2" stroke-dasharray="7 6" marker-end="url(#arrow)"/>
+<path d="M 70,802 L 70,549 L 150,549 L 150,297" fill="none" stroke="#99a8b4" stroke-width="2.2" stroke-dasharray="7 6" marker-end="url(#arrow)"/>
+<path d="M 70,802 L 70,597 L 172,597 L 172,392" fill="none" stroke="#99a8b4" stroke-width="2.2" stroke-dasharray="7 6" marker-end="url(#arrow)"/>
+<path d="M 70,802 L 70,642 L 198,642 L 198,483" fill="none" stroke="#99a8b4" stroke-width="2.2" stroke-dasharray="7 6" marker-end="url(#arrow)"/>
+<path d="M 70,802 L 70,687 L 160,687 L 160,572" fill="none" stroke="#99a8b4" stroke-width="2.2" stroke-dasharray="7 6" marker-end="url(#arrow)"/>
+<path d="M 70,802 L 70,734 L 152,734 L 152,667" fill="none" stroke="#99a8b4" stroke-width="2.2" stroke-dasharray="7 6" marker-end="url(#arrow)"/>
+<path d="M 70,802 L 118,802 L 118,764 L 166,764" fill="none" stroke="#99a8b4" stroke-width="2.2" stroke-dasharray="7 6" marker-end="url(#arrow)"/>
+<path d="M 70,802 L 70,833 L 132,833 L 132,864" fill="none" stroke="#99a8b4" stroke-width="2.2" stroke-dasharray="7 6" marker-end="url(#arrow)"/>
+<path d="M 734,802 L 734,511 L 750,511 L 750,220" fill="none" stroke="#99a8b4" stroke-width="2.2" stroke-dasharray="7 6" marker-end="url(#arrow)"/>
+<path d="M 734,802 L 734,687 L 642,687 L 642,572" fill="none" stroke="#99a8b4" stroke-width="2.2" stroke-dasharray="7 6" marker-end="url(#arrow)"/>
+<path d="M 734,802 L 734,734 L 652,734 L 652,667" fill="none" stroke="#99a8b4" stroke-width="2.2" stroke-dasharray="7 6" marker-end="url(#arrow)"/>
+<path d="M 734,802 L 665,802 L 665,764 L 596,764" fill="none" stroke="#99a8b4" stroke-width="2.2" stroke-dasharray="7 6" marker-end="url(#arrow)"/>
+<path d="M 734,802 L 693,802 L 693,864 L 652,864" fill="none" stroke="#99a8b4" stroke-width="2.2" stroke-dasharray="7 6" marker-end="url(#arrow)"/>
+<path d="M 388,68 L 344,68 L 344,118 L 388,118" fill="none" stroke="#99a8b4" stroke-width="2.2" stroke-dasharray="7 6" marker-end="url(#arrow)"/>
+<path d="M 388,160 L 388,160 L 388,276 L 330,276" fill="none" stroke="#99a8b4" stroke-width="2.2" stroke-dasharray="7 6" marker-end="url(#arrow)"/>
+<path d="M 330,318 L 342,318 L 342,370 L 379,370" fill="none" stroke="#99a8b4" stroke-width="2.2" stroke-dasharray="7 6" marker-end="url(#arrow)"/>
+<path d="M 379,414 L 322,414 L 322,462 L 308,462" fill="none" stroke="#99a8b4" stroke-width="2.2" stroke-dasharray="7 6" marker-end="url(#arrow)"/>
+<path d="M 308,504 L 312,504 L 312,550 L 401,550" fill="none" stroke="#99a8b4" stroke-width="2.2" stroke-dasharray="7 6" marker-end="url(#arrow)"/>
+<path d="M 401,594 L 401,594 L 401,646 L 402,646" fill="none" stroke="#99a8b4" stroke-width="2.2" stroke-dasharray="7 6" marker-end="url(#arrow)"/>
+<path d="M 402,688 L 356,688 L 356,742 L 381,742" fill="none" stroke="#99a8b4" stroke-width="2.2" stroke-dasharray="7 6" marker-end="url(#arrow)"/>
+<path d="M 381,786 L 332,786 L 332,842 L 392,842" fill="none" stroke="#99a8b4" stroke-width="2.2" stroke-dasharray="7 6" marker-end="url(#arrow)"/>
+<ellipse cx="388.0" cy="47.0" rx="210.0" ry="21.0" fill="#9eddea" stroke="#9a79a7" stroke-width="2"/>
+<text x="388.0" y="46" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#2a3b4c">Browse and Upload Stock Query / Portfolio</text>
+<ellipse cx="388.0" cy="139.0" rx="256.0" ry="21.0" fill="#cde86b" stroke="#9a79a7" stroke-width="2"/>
+<text x="388.0" y="138" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#2a3b4c">View Live Analysis Dashboard</text>
+<ellipse cx="585.0" cy="220.0" rx="165.0" ry="24.0" fill="#d8b3eb" stroke="#8f6aa7" stroke-width="2"/>
+<text x="585.0" y="216" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#2a3b4c">View Job Status and Saved Reports</text>
+<ellipse cx="330.0" cy="297.0" rx="180.0" ry="21.0" fill="#cde86b" stroke="#9a79a7" stroke-width="2"/>
+<text x="330.0" y="296" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#2a3b4c">Register and Login</text>
+<ellipse cx="379.0" cy="392.0" rx="207.0" ry="22.0" fill="#9eddea" stroke="#9a79a7" stroke-width="2"/>
+<text x="379.0" y="390" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#2a3b4c">Create Async Analysis Job</text>
+<ellipse cx="308.0" cy="483.0" rx="110.0" ry="21.0" fill="#cde86b" stroke="#9a79a7" stroke-width="2"/>
+<text x="308.0" y="475" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#2a3b4c">View Profile / API Key</text>
+<text x="308.0" y="491" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#2a3b4c">Status</text>
+<ellipse cx="401.0" cy="572.0" rx="241.0" ry="22.0" fill="#9eddea" stroke="#9a79a7" stroke-width="2"/>
+<text x="401.0" y="570" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#2a3b4c">Run Stock Analysis and Predict Performance</text>
+<ellipse cx="402.0" cy="667.0" rx="250.0" ry="21.0" fill="#cde86b" stroke="#9a79a7" stroke-width="2"/>
+<text x="402.0" y="666" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#2a3b4c">View Results, AI Explanation, and Price Levels</text>
+<ellipse cx="381.0" cy="764.0" rx="215.0" ry="22.0" fill="#d8b3eb" stroke="#8f6aa7" stroke-width="2"/>
+<text x="381.0" y="762" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#2a3b4c">Download PDF Reports and Chat History</text>
+<ellipse cx="392.0" cy="864.0" rx="260.0" ry="22.0" fill="#cde86b" stroke="#9a79a7" stroke-width="2"/>
+<text x="392.0" y="862" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#2a3b4c">Compare Stocks, View Trends, and Admin Stats</text>
+<text x="390" y="902" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#6d7a87">Indian Stock AI Agent use case diagram</text>
+</svg>

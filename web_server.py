@@ -18,6 +18,8 @@ from http.cookies import SimpleCookie
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, unquote, urlparse
+from urllib.request import Request, urlopen
+from urllib.error import URLError, HTTPError
 
 from agents.pipeline_orchestrator import run_full_analysis_with_pdf
 from config import OPENAI_API_KEY, PDF_OUTPUT_DIR, EXA_MCP_HTTP_URL
@@ -26,6 +28,7 @@ from main import extract_stock_symbol
 
 ROOT_DIR = Path(__file__).resolve().parent
 CHAT_HTML_PATH = ROOT_DIR / "chat.html"
+INDEX_HTML_PATH = ROOT_DIR / "index.html"
 REPORTS_DIR = Path(PDF_OUTPUT_DIR).resolve()
 DB_PATH = ROOT_DIR / "app_data.db"
 SESSION_COOKIE = "stock_session"
@@ -846,6 +849,10 @@ class StockChatHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         parsed = urlparse(self.path)
         path = parsed.path
+
+        if path == "/index.html":
+            self._send_html_file(INDEX_HTML_PATH)
+            return
 
         if path in ("/", "/chat.html"):
             self._send_html_file(CHAT_HTML_PATH)

@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stock Intelligence Studio — AI-Powered Indian Stock Analysis</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #0a0e17;
+      --surface: #111827;
+      --surface-2: #1a2235;
+      --border: #1e293b;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --accent: #3b82f6;
+      --accent-glow: rgba(59, 130, 246, 0.25);
+      --green: #10b981;
+      --red: #ef4444;
+      --amber: #f59e0b;
+      --gradient-1: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+      --gradient-2: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 2.5rem;
+      background: rgba(10, 14, 23, 0.8);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-brand {
+      display: flex; align-items: center; gap: 0.6rem;
+      font-weight: 800; font-size: 1.25rem; letter-spacing: -0.5px;
+      text-decoration: none; color: var(--text);
+    }
+    .nav-brand .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent-glow); }
+    .nav-links { display: flex; gap: 2rem; align-items: center; }
+    .nav-links a {
+      color: var(--text-muted); text-decoration: none; font-size: 0.9rem;
+      font-weight: 500; transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .btn {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.6rem 1.4rem; border-radius: 8px; font-weight: 600;
+      font-size: 0.9rem; text-decoration: none; border: none; cursor: pointer;
+      transition: all 0.25s;
+    }
+    .btn-primary {
+      background: var(--gradient-1); color: #fff;
+      box-shadow: 0 4px 20px var(--accent-glow);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px var(--accent-glow); }
+    .btn-outline {
+      background: transparent; color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      text-align: center; padding: 8rem 2rem 4rem;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(59,130,246,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-grid {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 70% 70% at 50% 40%, black 20%, transparent 70%);
+    }
+    .hero-content { position: relative; max-width: 820px; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.4rem 1rem; border-radius: 100px;
+      background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.25);
+      font-size: 0.8rem; font-weight: 600; color: var(--accent);
+      margin-bottom: 1.5rem;
+    }
+    .hero-badge .pulse {
+      width: 8px; height: 8px; border-radius: 50%; background: var(--green);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.5); } }
+    .hero h1 {
+      font-size: clamp(2.5rem, 6vw, 4.2rem); font-weight: 900;
+      line-height: 1.1; letter-spacing: -1.5px; margin-bottom: 1.5rem;
+    }
+    .hero h1 .gradient { background: var(--gradient-1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero p { font-size: 1.15rem; color: var(--text-muted); max-width: 600px; margin: 0 auto 2.5rem; line-height: 1.7; }
+    .hero-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .hero-stats {
+      display: flex; gap: 3rem; justify-content: center; margin-top: 4rem;
+      padding-top: 3rem; border-top: 1px solid var(--border);
+    }
+    .hero-stat { text-align: center; }
+    .hero-stat .num { font-size: 2rem; font-weight: 800; letter-spacing: -1px; }
+    .hero-stat .num.green { color: var(--green); }
+    .hero-stat .num.blue { color: var(--accent); }
+    .hero-stat .num.amber { color: var(--amber); }
+    .hero-stat .label { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem; }
+
+    /* ── FEATURES ── */
+    .section { padding: 6rem 2rem; }
+    .section-header { text-align: center; margin-bottom: 4rem; }
+    .section-header .tag {
+      display: inline-block; padding: 0.3rem 0.9rem; border-radius: 100px;
+      background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.2);
+      font-size: 0.75rem; font-weight: 700; color: var(--accent);
+      text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1rem;
+    }
+    .section-header h2 { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; letter-spacing: -1px; }
+    .section-header p { color: var(--text-muted); max-width: 550px; margin: 1rem auto 0; }
+    .features-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem; max-width: 1100px; margin: 0 auto;
+    }
+    .feature-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 16px; padding: 2rem; transition: all 0.3s;
+      position: relative; overflow: hidden;
+    }
+    .feature-card:hover { border-color: rgba(59,130,246,0.4); transform: translateY(-4px); }
+    .feature-card::after {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: var(--gradient-1); opacity: 0; transition: opacity 0.3s;
+    }
+    .feature-card:hover::after { opacity: 1; }
+    .feature-icon {
+      width: 48px; height: 48px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem; margin-bottom: 1.2rem;
+    }
+    .fi-blue { background: rgba(59,130,246,0.15); }
+    .fi-green { background: rgba(16,185,129,0.15); }
+    .fi-amber { background: rgba(245,158,11,0.15); }
+    .fi-purple { background: rgba(139,92,246,0.15); }
+    .fi-red { background: rgba(239,68,68,0.15); }
+    .fi-cyan { background: rgba(6,182,212,0.15); }
+    .feature-card h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .feature-card p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; }
+
+    /* ── HOW IT WORKS ── */
+    .steps { max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 0; }
+    .step {
+      display: flex; gap: 2rem; align-items: flex-start;
+      padding: 2rem 0; position: relative;
+    }
+    .step-num {
+      flex-shrink: 0; width: 56px; height: 56px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem; font-weight: 800;
+      background: var(--surface-2); border: 2px solid var(--border);
+      position: relative; z-index: 2;
+    }
+    .step:not(:last-child) .step-num::after {
+      content: ''; position: absolute; top: 56px; left: 50%;
+      width: 2px; height: calc(100% + 2rem); background: var(--border);
+      transform: translateX(-50%);
+    }
+    .step-content h3 { font-size: 1.2rem; font-weight: 700; margin-bottom: 0.4rem; }
+    .step-content p { color: var(--text-muted); font-size: 0.95rem; }
+
+    /* ── CTA ── */
+    .cta {
+      text-align: center; padding: 6rem 2rem;
+      background: var(--surface); border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .cta h2 { font-size: clamp(1.8rem, 4vw, 2.5rem); font-weight: 800; letter-spacing: -1px; margin-bottom: 1rem; }
+    .cta p { color: var(--text-muted); max-width: 500px; margin: 0 auto 2rem; }
+
+    /* ── FOOTER ── */
+    .footer {
+      padding: 3rem 2rem; text-align: center;
+      color: var(--text-muted); font-size: 0.85rem;
+      border-top: 1px solid var(--border);
+    }
+    .footer a { color: var(--accent); text-decoration: none; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .nav { padding: 1rem 1.2rem; }
+      .nav-links { display: none; }
+      .hero { padding: 7rem 1.2rem 3rem; }
+      .hero-stats { gap: 1.5rem; flex-wrap: wrap; }
+      .features-grid { grid-template-columns: 1fr; }
+      .step { gap: 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <a href="#" class="nav-brand"><span class="dot"></span> Stock Intelligence Studio</a>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#how-it-works">How It Works</a>
+      <a href="chat.html" class="btn btn-outline">Open App</a>
+      <a href="chat.html" class="btn btn-primary">Get Started →</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-grid"></div>
+    <div class="hero-content">
+      <div class="hero-badge"><span class="pulse"></span> Multi-Agent AI Engine — Live</div>
+      <h1>AI-Powered<br /><span class="gradient">Stock Analysis</span> for Everyone</h1>
+      <p>An AI-powered platform that coordinates 10 specialized agents to deliver structured, data-based, and explainable stock analysis for Indian markets — NSE &amp; BSE.</p>
+      <div class="hero-actions">
+        <a href="chat.html" class="btn btn-primary">Start Analyzing Free →</a>
+        <a href="#how-it-works" class="btn btn-outline">See How It Works</a>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat"><div class="num green">10</div><div class="label">Specialized AI Agents</div></div>
+        <div class="hero-stat"><div class="num blue">3</div><div class="label">Analysis Phases</div></div>
+        <div class="hero-stat"><div class="num amber">&lt;60s</div><div class="label">Avg. Report Time</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="section" id="features">
+    <div class="section-header">
+      <span class="tag">Capabilities</span>
+      <h2>Everything You Need to Invest Smarter</h2>
+      <p>From real-time data to adversarial debate — every layer is designed for clarity and confidence.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon fi-blue">📊</div>
+        <h3>Fundamental Analysis</h3>
+        <p>Deep dive into P/E, P/B, ROE, debt levels, revenue growth, and financial health scores pulled live from market data.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon fi-green">📈</div>
+        <h3>Technical Indicators</h3>
+        <p>RSI, MACD, Bollinger Bands, moving averages, and support/resistance levels computed from historical OHLCV data.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon fi-amber">📰</div>
+        <h3>News & Sentiment</h3>
+        <p>Real-time news aggregation via Exa MCP with sentiment scoring, event detection, and market mood indexing.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon fi-purple">🌍</div>
+        <h3>Macro Context</h3>
+        <p>RBI policy impact, inflation trends, FII/DII flows, and global market correlations for holistic perspective.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon fi-red">⚖️</div>
+        <h3>Bull vs Bear Debate</h3>
+        <p>Two adversarial AI agents argue opposing theses, moderated by a Debate Judge — mimicking institutional committees.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon fi-cyan">🛡️</div>
+        <h3>Risk Management</h3>
+        <p>Position sizing, stop-loss levels, volatility assessment, and portfolio-level risk scoring for every recommendation.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="section" id="how-it-works">
+    <div class="section-header">
+      <span class="tag">Workflow</span>
+      <h2>How the Analysis Pipeline Works</h2>
+      <p>A sequential multi-agent pipeline ensures thorough, unbiased evaluation at every stage.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h3>Submit Your Query</h3>
+          <p>Enter any NSE/BSE stock symbol or ask a natural language question. Configure your risk profile and investment horizon via the Accuracy Builder.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h3>Data Aggregation</h3>
+          <p>The system fetches real-time prices, fundamentals, historical data via yfinance, and live news intelligence through Exa MCP web research.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h3>Multi-Agent Analysis</h3>
+          <p>Six specialized agents — Fundamental, Technical, Sentiment, Macro, Document, and News Intelligence — analyze the data in parallel.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h3>Adversarial Debate</h3>
+          <p>Bull and Bear agents construct opposing investment theses. A Debate Judge evaluates both sides and delivers a balanced verdict.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <h3>Risk Assessment & PDF Report</h3>
+          <p>The Risk Manager evaluates portfolio impact. The Orchestrator synthesizes everything into a professional A4 PDF report with BUY/SELL/HOLD recommendation.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta">
+    <h2>Ready to Analyze Your Next Investment?</h2>
+    <p>Start free — no credit card required. Get institutional-grade stock analysis in under a minute.</p>
+    <a href="chat.html" class="btn btn-primary" style="font-size:1rem; padding:0.8rem 2rem;">Launch the Platform →</a>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <p>Built with OpenAI Agents SDK, yfinance &amp; Exa MCP &middot; <a href="chat.html">Stock Intelligence Studio</a> &copy; 2026</p>
+  </footer>
+
+</body>
+</html>

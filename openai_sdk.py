@@ -9,6 +9,9 @@ manipulating sys.path to exclude the local directory.
 import sys
 import os
 from contextlib import contextmanager
+from dotenv import load_dotenv
+
+load_dotenv()
 
 SDK_AVAILABLE = False
 _import_error = None
@@ -60,6 +63,20 @@ try:
     _sdk_function_tool = getattr(_sdk, 'function_tool', lambda x: x)
     handoff = getattr(_sdk, 'handoff', None)
     SDK_AVAILABLE = True
+
+    # Configure custom OpenAI client for self-signed certificate endpoints
+    _base_url = os.getenv("OPENAI_BASE_URL", "")
+    if _base_url:
+        import httpx
+        from openai import AsyncOpenAI
+        _async_http_client = httpx.AsyncClient(verify=False)
+        _custom_client = AsyncOpenAI(
+            api_key=os.getenv("OPENAI_API_KEY", ""),
+            base_url=_base_url,
+            http_client=_async_http_client,
+        )
+        _sdk.set_default_openai_client(_custom_client)
+        _sdk.set_tracing_disabled(True)  # Disable tracing for custom endpoints
 
 except ImportError as e:
     import traceback

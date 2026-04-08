@@ -20,11 +20,12 @@ def mask_key(key: str) -> str:
 
 
 def main() -> int:
+    load_dotenv()
+
     parser = argparse.ArgumentParser()
     parser.add_argument("--model", default=os.getenv("MODEL_NAME", "gpt-4o-mini"))
     args = parser.parse_args()
 
-    load_dotenv()
     api_key = os.getenv("OPENAI_API_KEY", "").strip()
 
     if not api_key:
@@ -35,7 +36,13 @@ def main() -> int:
     print(f"[INFO] Testing model: {args.model}")
 
     try:
-        client = OpenAI(api_key=api_key, timeout=20.0, max_retries=0)
+        base_url = os.getenv("OPENAI_BASE_URL", None)
+        kwargs = dict(api_key=api_key, timeout=20.0, max_retries=0)
+        if base_url:
+            import httpx
+            kwargs["base_url"] = base_url
+            kwargs["http_client"] = httpx.Client(verify=False)
+        client = OpenAI(**kwargs)
         response = client.responses.create(
             model=args.model,
             input="Reply with exactly: API_OK",

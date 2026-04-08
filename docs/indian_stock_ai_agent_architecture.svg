@@ -1,0 +1,310 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2280" height="1660" viewBox="0 0 2280 1660">
+
+    <defs>
+      <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#fbfdff"/>
+        <stop offset="100%" stop-color="#eef5fb"/>
+      </linearGradient>
+      <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+        <path d="M 0 0 L 12 6 L 0 12 z" fill="#62758a"/>
+      </marker>
+    </defs>
+    <rect x="0" y="0" width="100%" height="100%" fill="url(#bg)"/>
+    
+
+    <text x="1140" y="32" text-anchor="middle" font-family="Segoe UI Semibold, Arial, sans-serif" font-size="28" fill="#16324a">
+      Indian Stock AI Agent - Full Project Architecture
+    </text>
+    <text x="1140" y="58" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14" fill="#50667d">
+      Sequential multi-agent stock analysis pipeline, tool dependencies, reporting, web APIs, and persistence
+    </text>
+    
+<rect x="40" y="30" rx="22" ry="22" width="1440" height="240" fill="none" stroke="#9fb6cc" stroke-width="2" stroke-dasharray="10 8"/>
+<text x="58" y="58" font-family="Segoe UI Semibold, Arial, sans-serif" font-size="18" fill="#35516e">Application Entry + Interface Layer</text>
+<rect x="430" y="260" rx="22" ry="22" width="760" height="270" fill="none" stroke="#9fb6cc" stroke-width="2" stroke-dasharray="10 8"/>
+<text x="448" y="288" font-family="Segoe UI Semibold, Arial, sans-serif" font-size="18" fill="#35516e">Core Orchestration Layer</text>
+<rect x="40" y="570" rx="22" ry="22" width="1725" height="230" fill="none" stroke="#9fb6cc" stroke-width="2" stroke-dasharray="10 8"/>
+<text x="58" y="598" font-family="Segoe UI Semibold, Arial, sans-serif" font-size="18" fill="#35516e">Specialist Agents</text>
+<rect x="470" y="810" rx="22" ry="22" width="1510" height="250" fill="none" stroke="#9fb6cc" stroke-width="2" stroke-dasharray="10 8"/>
+<text x="488" y="838" font-family="Segoe UI Semibold, Arial, sans-serif" font-size="18" fill="#35516e">Debate + Risk Layer</text>
+<rect x="30" y="1080" rx="22" ry="22" width="2190" height="270" fill="none" stroke="#9fb6cc" stroke-width="2" stroke-dasharray="10 8"/>
+<text x="48" y="1108" font-family="Segoe UI Semibold, Arial, sans-serif" font-size="18" fill="#35516e">Tooling Layer</text>
+<rect x="1660" y="260" rx="22" ry="22" width="490" height="540" fill="none" stroke="#9fb6cc" stroke-width="2" stroke-dasharray="10 8"/>
+<text x="1678" y="288" font-family="Segoe UI Semibold, Arial, sans-serif" font-size="18" fill="#35516e">Models / Reporting</text>
+<rect x="35" y="260" rx="22" ry="22" width="360" height="280" fill="none" stroke="#9fb6cc" stroke-width="2" stroke-dasharray="10 8"/>
+<text x="53" y="288" font-family="Segoe UI Semibold, Arial, sans-serif" font-size="18" fill="#35516e">Persistent Storage</text>
+<rect x="930" y="1390" rx="22" ry="22" width="660" height="220" fill="none" stroke="#9fb6cc" stroke-width="2" stroke-dasharray="10 8"/>
+<text x="948" y="1418" font-family="Segoe UI Semibold, Arial, sans-serif" font-size="18" fill="#35516e">User-Facing Outputs</text>
+<path d="M 330,200 L 330,250 L 810,250 L 810,300" fill="none" stroke="#516579" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="570" y="242" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#516579" text-anchor="middle">analyze request</text>
+<path d="M 490,135 L 805,135 L 805,135 L 1120,135" fill="none" stroke="#8a6c2d" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="805" y="127" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#8a6c2d" text-anchor="middle">imports wrapper</text>
+<path d="M 810,230 L 810,265 L 810,265 L 810,300" fill="none" stroke="#2a6d52" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="810" y="257" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#2a6d52" text-anchor="middle">chat job</text>
+<path d="M 620,150 L 620,245 L 380,245 L 380,405" fill="none" stroke="#2a6d52" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="500" y="237" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#2a6d52" text-anchor="middle">auth / history</text>
+<path d="M 810,300 L 1285,300 L 1285,200 L 1285,200" fill="none" stroke="#8a6c2d" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="1293" y="242" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#8a6c2d" text-anchor="middle">Runner.run()</text>
+<path d="M 810,500 L 205,500 L 205,610 L 205,610" fill="none" stroke="#4d87ad" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="213" y="547" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#4d87ad" text-anchor="middle">1</text>
+<path d="M 810,500 L 485,500 L 485,610 L 485,610" fill="none" stroke="#4d87ad" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="493" y="547" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#4d87ad" text-anchor="middle">2</text>
+<path d="M 810,500 L 765,500 L 765,610 L 765,610" fill="none" stroke="#4d87ad" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="773" y="547" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#4d87ad" text-anchor="middle">3</text>
+<path d="M 810,500 L 1045,500 L 1045,610 L 1045,610" fill="none" stroke="#4d87ad" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="1053" y="547" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#4d87ad" text-anchor="middle">3b</text>
+<path d="M 810,500 L 1325,500 L 1325,610 L 1325,610" fill="none" stroke="#4d87ad" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="1333" y="547" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#4d87ad" text-anchor="middle">4</text>
+<path d="M 810,500 L 1605,500 L 1605,610 L 1605,610" fill="none" stroke="#4d87ad" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="1613" y="547" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#4d87ad" text-anchor="middle">5</text>
+<path d="M 810,500 L 630,500 L 630,850 L 630,850" fill="none" stroke="#2f7f4f" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="638" y="667" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#2f7f4f" text-anchor="middle">6</text>
+<path d="M 810,500 L 930,500 L 930,850 L 930,850" fill="none" stroke="#a04040" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="938" y="667" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#a04040" text-anchor="middle">7</text>
+<path d="M 810,500 L 1230,500 L 1230,850 L 1230,850" fill="none" stroke="#a06e20" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="1238" y="667" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#a06e20" text-anchor="middle">8</text>
+<path d="M 810,500 L 1535,500 L 1535,850 L 1535,850" fill="none" stroke="#a06e20" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="1543" y="667" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#a06e20" text-anchor="middle">9</text>
+<path d="M 1150,400 L 1835,400 L 1835,850 L 1835,850" fill="none" stroke="#a06e20" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="1843" y="617" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#a06e20" text-anchor="middle">portfolio mode</text>
+<path d="M 205,755 L 205,937 L 200,937 L 200,1120" fill="none" stroke="#4b6d89" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M 485,755 L 235,755 L 235,1120 L 200,1120" fill="none" stroke="#4b6d89" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M 485,755 L 485,937 L 510,937 L 510,1120" fill="none" stroke="#4b6d89" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M 765,755 L 765,937 L 820,937 L 820,1120" fill="none" stroke="#4b6d89" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M 1045,775 L 815,775 L 815,1120 L 820,1120" fill="none" stroke="#4b6d89" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M 1045,775 L 1045,947 L 1130,947 L 1130,1120" fill="none" stroke="#4b6d89" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M 1325,755 L 1325,937 L 1440,937 L 1440,1120" fill="none" stroke="#4b6d89" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M 1605,755 L 1605,937 L 1750,937 L 1750,1120" fill="none" stroke="#4b6d89" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M 1535,1015 L 1535,1067 L 2060,1067 L 2060,1120" fill="none" stroke="#4b6d89" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M 1835,1015 L 2060,1015 L 2060,1120 L 2060,1120" fill="none" stroke="#4b6d89" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M 1150,400 L 1150,405 L 1710,405 L 1710,405" fill="none" stroke="#6950a1" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="1430" y="397" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#6950a1" text-anchor="middle">structured outputs</text>
+<path d="M 1150,400 L 1150,650 L 1710,650 L 1710,665" fill="none" stroke="#b96d33" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="1430" y="642" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#b96d33" text-anchor="middle">StockReportData</text>
+<path d="M 1910,510 L 1910,535 L 1910,535 L 1910,560" fill="none" stroke="#8d58b2" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="1910" y="527" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#8d58b2" text-anchor="middle">validated model shape</text>
+<path d="M 1910,770 L 1400,770 L 1400,1430 L 1260,1430" fill="none" stroke="#348456" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="1408" y="1092" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#348456" text-anchor="middle">final PDF</text>
+<path d="M 810,500 L 1050,500 L 1050,1430 L 1260,1430" fill="none" stroke="#348456" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="1058" y="957" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#348456" text-anchor="middle">final recommendation</text>
+<path d="M 810,230 L 860,230 L 860,1430 L 1260,1430" fill="none" stroke="#2a6d52" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="868" y="822" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#2a6d52" text-anchor="middle">serve reports / history</text>
+<rect x="170" y="70" rx="16" ry="16" width="320" height="130" fill="#edf5ff" stroke="#23405f" stroke-width="2"/>
+<rect x="170" y="70" rx="16" ry="16" width="320" height="34" fill="#153047" />
+<rect x="170" y="104" width="320" height="96" fill="#edf5ff" />
+<line x1="170" y1="104" x2="490" y2="104" stroke="#23405f" stroke-width="2"/>
+<text x="330.0" y="92" text-anchor="middle" font-family="Segoe UI Semibold, Arial, sans-serif" font-size="16" fill="#ffffff">main.py / agent.py</text>
+<text x="184" y="128" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">CLI entrypoint and legacy single-agent</text>
+<text x="184" y="146" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">compatibility.</text>
+<text x="184" y="164" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">extract_stock_symbol(), analyze_stock(),</text>
+<text x="184" y="182" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">interactive_session().</text>
+<rect x="620" y="70" rx="16" ry="16" width="380" height="160" fill="#eefcf7" stroke="#2a6d52" stroke-width="2"/>
+<rect x="620" y="70" rx="16" ry="16" width="380" height="34" fill="#17543b" />
+<rect x="620" y="104" width="380" height="126" fill="#eefcf7" />
+<line x1="620" y1="104" x2="1000" y2="104" stroke="#2a6d52" stroke-width="2"/>
+<text x="810.0" y="92" text-anchor="middle" font-family="Segoe UI Semibold, Arial, sans-serif" font-size="16" fill="#ffffff">web_server.py</text>
+<text x="634" y="128" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">StockChatHandler with auth, job polling, report</text>
+<text x="634" y="146" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">serving, admin APIs.</text>
+<text x="634" y="164" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">Routes: register, login, chat, reports, admin</text>
+<text x="634" y="182" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">stats.</text>
+<rect x="1120" y="70" rx="16" ry="16" width="330" height="130" fill="#fff6e7" stroke="#96611f" stroke-width="2"/>
+<rect x="1120" y="70" rx="16" ry="16" width="330" height="34" fill="#7d4e12" />
+<rect x="1120" y="104" width="330" height="96" fill="#fff6e7" />
+<line x1="1120" y1="104" x2="1450" y2="104" stroke="#96611f" stroke-width="2"/>
+<text x="1285.0" y="92" text-anchor="middle" font-family="Segoe UI Semibold, Arial, sans-serif" font-size="16" fill="#ffffff">openai_sdk.py</text>
+<text x="1134" y="128" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">Namespace-safe wrapper around OpenAI</text>
+<text x="1134" y="146" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">Agents SDK.</text>
+<text x="1134" y="164" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">Provides Agent, Runner, ModelSettings,</text>
+<text x="1134" y="182" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">function_tool.</text>
+<rect x="470" y="300" rx="16" ry="16" width="680" height="200" fill="#f4efff" stroke="#6950a1" stroke-width="2"/>
+<rect x="470" y="300" rx="16" ry="16" width="680" height="34" fill="#4f378b" />
+<rect x="470" y="334" width="680" height="166" fill="#f4efff" />
+<line x1="470" y1="334" x2="1150" y2="334" stroke="#6950a1" stroke-width="2"/>
+<text x="810.0" y="322" text-anchor="middle" font-family="Segoe UI Semibold, Arial, sans-serif" font-size="16" fill="#ffffff">agents/pipeline_orchestrator.py</text>
+<text x="484" y="358" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">Sequential multi-agent runner with guaranteed execution order.</text>
+<text x="484" y="376" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">fetch_raw_stock_data(), run_stock_analysis_pipeline(),</text>
+<text x="484" y="394" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">run_full_analysis_with_pdf().</text>
+<text x="484" y="412" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">Collects raw market data, agent outputs, citations, risk metrics, and final</text>
+<text x="484" y="430" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">recommendation.</text>
+<rect x="80" y="610" rx="16" ry="16" width="250" height="145" fill="#dff3ff" stroke="#2c6f98" stroke-width="2"/>
+<rect x="80" y="610" rx="16" ry="16" width="250" height="34" fill="#20638d" />
+<rect x="80" y="644" width="250" height="111" fill="#dff3ff" />
+<line x1="80" y1="644" x2="330" y2="644" stroke="#2c6f98" stroke-width="2"/>
+<text x="205.0" y="632" text-anchor="middle" font-family="Segoe UI Semibold, Arial, sans-serif" font-size="16" fill="#ffffff">Fundamental Analyst</text>
+<text x="94" y="668" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">Valuation, ROE, debt, growth,</text>
+<text x="94" y="686" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">profitability.</text>
+<rect x="360" y="610" rx="16" ry="16" width="250" height="145" fill="#dff3ff" stroke="#2c6f98" stroke-width="2"/>
+<rect x="360" y="610" rx="16" ry="16" width="250" height="34" fill="#20638d" />
+<rect x="360" y="644" width="250" height="111" fill="#dff3ff" />
+<line x1="360" y1="644" x2="610" y2="644" stroke="#2c6f98" stroke-width="2"/>
+<text x="485.0" y="632" text-anchor="middle" font-family="Segoe UI Semibold, Arial, sans-serif" font-size="16" fill="#ffffff">Technical Analyst</text>
+<text x="374" y="668" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">RSI, MACD, moving averages,</text>
+<text x="374" y="686" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">trend, support and resistance.</text>
+<rect x="640" y="610" rx="16" ry="16" width="250" height="145" fill="#dff3ff" stroke="#2c6f98" stroke-width="2"/>
+<rect x="640" y="610" rx="16" ry="16" width="250" height="34" fill="#20638d" />
+<rect x="640" y="644" width="250" height="111" fill="#dff3ff" />
+<line x1="640" y1="644" x2="890" y2="644" stroke="#2c6f98" stroke-width="2"/>
+<text x="765.0" y="632" text-anchor="middle" font-family="Segoe UI Semibold, Arial, sans-serif" font-size="16" fill="#ffffff">Sentiment Analyst</text>
+<text x="654" y="668" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">News fetch, VADER/TextBlob</text>
+<text x="654" y="686" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">sentiment scoring, market mood.</text>
+<rect x="920" y="610" rx="16" ry="16" width="250" height="165" fill="#dff3ff" stroke="#2c6f98" stroke-width="2"/>
+<rect x="920" y="610" rx="16" ry="16" width="250" height="34" fill="#20638d" />
+<rect x="920" y="644" width="250" height="131" fill="#dff3ff" />
+<line x1="920" y1="644" x2="1170" y2="644" stroke="#2c6f98" stroke-width="2"/>
+<text x="1045.0" y="632" text-anchor="middle" font-family="Segoe UI Semibold, Arial, sans-serif" font-size="16" fill="#ffffff">News Intelligence Agent</text>
+<text x="934" y="668" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">Exa live research, event</text>
+<text x="934" y="686" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">detection, impact scoring,</text>
+<text x="934" y="704" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">sector news.</text>
+<rect x="1200" y="610" rx="16" ry="16" width="250" height="145" fill="#dff3ff" stroke="#2c6f98" stroke-width="2"/>
+<rect x="1200" y="610" rx="16" ry="16" width="250" height="34" fill="#20638d" />
+<rect x="1200" y="644" width="250" height="111" fill="#dff3ff" />
+<line x1="1200" y1="644" x2="1450" y2="644" stroke="#2c6f98" stroke-width="2"/>
+<text x="1325.0" y="632" text-anchor="middle" font-family="Segoe UI Semibold, Arial, sans-serif" font-size="16" fill="#ffffff">Macro Analyst</text>
+<text x="1214" y="668" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">India macro data, FII/DII</text>
+<text x="1214" y="686" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">flows, benchmark and sector</text>
+<text x="1214" y="704" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">context.</text>
+<rect x="1480" y="610" rx="16" ry="16" width="250" height="145" fill="#dff3ff" stroke="#2c6f98" stroke-width="2"/>
+<rect x="1480" y="610" rx="16" ry="16" width="250" height="34" fill="#20638d" />
+<rect x="1480" y="644" width="250" height="111" fill="#dff3ff" />
+<line x1="1480" y1="644" x2="1730" y2="644" stroke="#2c6f98" stroke-width="2"/>
+<text x="1605.0" y="632" text-anchor="middle" font-family="Segoe UI Semibold, Arial, sans-serif" font-size="16" fill="#ffffff">Document Analyst</text>
+<text x="1494" y="668" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">Quarterly results,</text>
+<text x="1494" y="686" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">announcements, management</text>
+<text x="1494" y="704" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">commentary, peer comparison.</text>
+<rect x="510" y="850" rx="16" ry="16" width="240" height="145" fill="#e4fbec" stroke="#2f7f4f" stroke-width="2"/>
+<rect x="510" y="850" rx="16" ry="16" width="240" height="34" fill="#1c6b3a" />
+<rect x="510" y="884" width="240" height="111" fill="#e4fbec" />
+<line x1="510" y1="884" x2="750" y2="884" stroke="#2f7f4f" stroke-width="2"/>
+<text x="630.0" y="872" text-anchor="middle" font-family="Segoe UI Semibold, Arial, sans-serif" font-size="16" fill="#ffffff">Bull Advocate</text>
+<text x="524" y="908" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">Builds strongest bullish</text>
+<text x="524" y="926" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">thesis from analysis context.</text>
+<rect x="810" y="850" rx="16" ry="16" width="240" height="145" fill="#ffe7e7" stroke="#a04040" stroke-width="2"/>
+<rect x="810" y="850" rx="16" ry="16" width="240" height="34" fill="#8b2c2c" />
+<rect x="810" y="884" width="240" height="111" fill="#ffe7e7" />
+<line x1="810" y1="884" x2="1050" y2="884" stroke="#a04040" stroke-width="2"/>
+<text x="930.0" y="872" text-anchor="middle" font-family="Segoe UI Semibold, Arial, sans-serif" font-size="16" fill="#ffffff">Bear Advocate</text>
+<text x="824" y="908" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">Builds strongest bearish</text>
+<text x="824" y="926" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">thesis and downside case.</text>
+<rect x="1110" y="850" rx="16" ry="16" width="240" height="145" fill="#fff2dd" stroke="#a06e20" stroke-width="2"/>
+<rect x="1110" y="850" rx="16" ry="16" width="240" height="34" fill="#8a5b12" />
+<rect x="1110" y="884" width="240" height="111" fill="#fff2dd" />
+<line x1="1110" y1="884" x2="1350" y2="884" stroke="#a06e20" stroke-width="2"/>
+<text x="1230.0" y="872" text-anchor="middle" font-family="Segoe UI Semibold, Arial, sans-serif" font-size="16" fill="#ffffff">Debate Judge</text>
+<text x="1124" y="908" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">Scores both sides and returns</text>
+<text x="1124" y="926" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">balanced verdict.</text>
+<rect x="1410" y="850" rx="16" ry="16" width="250" height="165" fill="#fff5df" stroke="#a06e20" stroke-width="2"/>
+<rect x="1410" y="850" rx="16" ry="16" width="250" height="34" fill="#8a5b12" />
+<rect x="1410" y="884" width="250" height="131" fill="#fff5df" />
+<line x1="1410" y1="884" x2="1660" y2="884" stroke="#a06e20" stroke-width="2"/>
+<text x="1535.0" y="872" text-anchor="middle" font-family="Segoe UI Semibold, Arial, sans-serif" font-size="16" fill="#ffffff">Risk Manager</text>
+<text x="1424" y="908" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">Position sizing, ATR/support</text>
+<text x="1424" y="926" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">stop-loss, risk-reward,</text>
+<text x="1424" y="944" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">allocation limits.</text>
+<rect x="1710" y="850" rx="16" ry="16" width="250" height="165" fill="#fff5df" stroke="#a06e20" stroke-width="2"/>
+<rect x="1710" y="850" rx="16" ry="16" width="250" height="34" fill="#8a5b12" />
+<rect x="1710" y="884" width="250" height="131" fill="#fff5df" />
+<line x1="1710" y1="884" x2="1960" y2="884" stroke="#a06e20" stroke-width="2"/>
+<text x="1835.0" y="872" text-anchor="middle" font-family="Segoe UI Semibold, Arial, sans-serif" font-size="16" fill="#ffffff">Portfolio Analyst</text>
+<text x="1724" y="908" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">Portfolio health, correlation,</text>
+<text x="1724" y="926" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">risk metrics, rebalancing.</text>
+<rect x="60" y="1120" rx="16" ry="16" width="280" height="175" fill="#eef7ff" stroke="#4b6d89" stroke-width="2"/>
+<rect x="60" y="1120" rx="16" ry="16" width="280" height="34" fill="#355c7d" />
+<rect x="60" y="1154" width="280" height="141" fill="#eef7ff" />
+<line x1="60" y1="1154" x2="340" y2="1154" stroke="#4b6d89" stroke-width="2"/>
+<text x="200.0" y="1142" text-anchor="middle" font-family="Segoe UI Semibold, Arial, sans-serif" font-size="16" fill="#ffffff">tools/stock_data.py</text>
+<text x="74" y="1178" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">get_stock_price()</text>
+<text x="74" y="1196" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">get_stock_info()</text>
+<text x="74" y="1214" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">get_historical_data()</text>
+<text x="74" y="1232" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">get_fundamentals()</text>
+<rect x="370" y="1120" rx="16" ry="16" width="280" height="175" fill="#eef7ff" stroke="#4b6d89" stroke-width="2"/>
+<rect x="370" y="1120" rx="16" ry="16" width="280" height="34" fill="#355c7d" />
+<rect x="370" y="1154" width="280" height="141" fill="#eef7ff" />
+<line x1="370" y1="1154" x2="650" y2="1154" stroke="#4b6d89" stroke-width="2"/>
+<text x="510.0" y="1142" text-anchor="middle" font-family="Segoe UI Semibold, Arial, sans-serif" font-size="16" fill="#ffffff">tools/technical_analysis.py</text>
+<text x="384" y="1178" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">get_technical_indicators()</text>
+<text x="384" y="1196" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">get_support_resistance()</text>
+<text x="384" y="1214" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">analyze_trend()</text>
+<rect x="680" y="1120" rx="16" ry="16" width="280" height="195" fill="#eef7ff" stroke="#4b6d89" stroke-width="2"/>
+<rect x="680" y="1120" rx="16" ry="16" width="280" height="34" fill="#355c7d" />
+<rect x="680" y="1154" width="280" height="161" fill="#eef7ff" />
+<line x1="680" y1="1154" x2="960" y2="1154" stroke="#4b6d89" stroke-width="2"/>
+<text x="820.0" y="1142" text-anchor="middle" font-family="Segoe UI Semibold, Arial, sans-serif" font-size="16" fill="#ffffff">News / Sentiment Tools</text>
+<text x="694" y="1178" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">news_fetcher.py</text>
+<text x="694" y="1196" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">sentiment_analyzer.py</text>
+<text x="694" y="1214" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">news_intelligence.py</text>
+<text x="694" y="1232" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">get_stock_news(),</text>
+<text x="694" y="1250" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">analyze_news_sentiment(),</text>
+<text x="694" y="1268" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">fetch_comprehensive_news(),</text>
+<text x="694" y="1286" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">analyze_news_with_events()</text>
+<rect x="990" y="1120" rx="16" ry="16" width="280" height="175" fill="#eef7ff" stroke="#4b6d89" stroke-width="2"/>
+<rect x="990" y="1120" rx="16" ry="16" width="280" height="34" fill="#355c7d" />
+<rect x="990" y="1154" width="280" height="141" fill="#eef7ff" />
+<line x1="990" y1="1154" x2="1270" y2="1154" stroke="#4b6d89" stroke-width="2"/>
+<text x="1130.0" y="1142" text-anchor="middle" font-family="Segoe UI Semibold, Arial, sans-serif" font-size="16" fill="#ffffff">tools/exa_research.py</text>
+<text x="1004" y="1178" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">exa_web_search_stock_news()</text>
+<text x="1004" y="1196" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">exa_company_snapshot()</text>
+<text x="1004" y="1214" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">exa_deep_stock_research()</text>
+<text x="1004" y="1232" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">exa_live_company_intelligence()</text>
+<rect x="1300" y="1120" rx="16" ry="16" width="280" height="175" fill="#eef7ff" stroke="#4b6d89" stroke-width="2"/>
+<rect x="1300" y="1120" rx="16" ry="16" width="280" height="34" fill="#355c7d" />
+<rect x="1300" y="1154" width="280" height="141" fill="#eef7ff" />
+<line x1="1300" y1="1154" x2="1580" y2="1154" stroke="#4b6d89" stroke-width="2"/>
+<text x="1440.0" y="1142" text-anchor="middle" font-family="Segoe UI Semibold, Arial, sans-serif" font-size="16" fill="#ffffff">tools/macro_data.py</text>
+<text x="1314" y="1178" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">India macro indicators, benchmark</text>
+<text x="1314" y="1196" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">comparison,</text>
+<text x="1314" y="1214" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">sector performance, FII/DII</text>
+<text x="1314" y="1232" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">activity, global context.</text>
+<rect x="1610" y="1120" rx="16" ry="16" width="280" height="175" fill="#eef7ff" stroke="#4b6d89" stroke-width="2"/>
+<rect x="1610" y="1120" rx="16" ry="16" width="280" height="34" fill="#355c7d" />
+<rect x="1610" y="1154" width="280" height="141" fill="#eef7ff" />
+<line x1="1610" y1="1154" x2="1890" y2="1154" stroke="#4b6d89" stroke-width="2"/>
+<text x="1750.0" y="1142" text-anchor="middle" font-family="Segoe UI Semibold, Arial, sans-serif" font-size="16" fill="#ffffff">tools/document_analyzer.py</text>
+<text x="1624" y="1178" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">Announcements, quarterly results,</text>
+<text x="1624" y="1196" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">document search,</text>
+<text x="1624" y="1214" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">management commentary, peer</text>
+<text x="1624" y="1232" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">comparison.</text>
+<rect x="1920" y="1120" rx="16" ry="16" width="280" height="195" fill="#eef7ff" stroke="#4b6d89" stroke-width="2"/>
+<rect x="1920" y="1120" rx="16" ry="16" width="280" height="34" fill="#355c7d" />
+<rect x="1920" y="1154" width="280" height="161" fill="#eef7ff" />
+<line x1="1920" y1="1154" x2="2200" y2="1154" stroke="#4b6d89" stroke-width="2"/>
+<text x="2060.0" y="1142" text-anchor="middle" font-family="Segoe UI Semibold, Arial, sans-serif" font-size="16" fill="#ffffff">Risk / Portfolio Tools</text>
+<text x="1934" y="1178" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">risk_management.py</text>
+<text x="1934" y="1196" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">portfolio_analyzer.py</text>
+<text x="1934" y="1214" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">calculate_position_size(),</text>
+<text x="1934" y="1232" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">calculate_stop_loss_levels(),</text>
+<text x="1934" y="1250" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">analyze_portfolio_health(),</text>
+<text x="1934" y="1268" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">suggest_rebalancing()</text>
+<rect x="1710" y="300" rx="16" ry="16" width="400" height="210" fill="#f0edff" stroke="#6950a1" stroke-width="2"/>
+<rect x="1710" y="300" rx="16" ry="16" width="400" height="34" fill="#4f378b" />
+<rect x="1710" y="334" width="400" height="176" fill="#f0edff" />
+<line x1="1710" y1="334" x2="2110" y2="334" stroke="#6950a1" stroke-width="2"/>
+<text x="1910.0" y="322" text-anchor="middle" font-family="Segoe UI Semibold, Arial, sans-serif" font-size="16" fill="#ffffff">models/schemas.py</text>
+<text x="1724" y="358" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">Pydantic output models:</text>
+<text x="1724" y="376" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">FundamentalAnalysis, TechnicalAnalysis,</text>
+<text x="1724" y="394" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">SentimentAnalysis, StockRecommendation.</text>
+<rect x="1710" y="560" rx="16" ry="16" width="400" height="210" fill="#fff3ea" stroke="#b96d33" stroke-width="2"/>
+<rect x="1710" y="560" rx="16" ry="16" width="400" height="34" fill="#8d4b1c" />
+<rect x="1710" y="594" width="400" height="176" fill="#fff3ea" />
+<line x1="1710" y1="594" x2="2110" y2="594" stroke="#b96d33" stroke-width="2"/>
+<text x="1910.0" y="582" text-anchor="middle" font-family="Segoe UI Semibold, Arial, sans-serif" font-size="16" fill="#ffffff">pdf_generator.py</text>
+<text x="1724" y="618" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">StockReportData and generate_stock_report().</text>
+<text x="1724" y="636" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">Builds final professional PDF report from</text>
+<text x="1724" y="654" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">authoritative raw data + synthesized analysis.</text>
+<rect x="60" y="300" rx="16" ry="16" width="320" height="210" fill="#eefcf7" stroke="#2a6d52" stroke-width="2"/>
+<rect x="60" y="300" rx="16" ry="16" width="320" height="34" fill="#17543b" />
+<rect x="60" y="334" width="320" height="176" fill="#eefcf7" />
+<line x1="60" y1="334" x2="380" y2="334" stroke="#2a6d52" stroke-width="2"/>
+<text x="220.0" y="322" text-anchor="middle" font-family="Segoe UI Semibold, Arial, sans-serif" font-size="16" fill="#ffffff">SQLite app_data.db</text>
+<text x="74" y="358" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">Tables: users, sessions, chat_history,</text>
+<text x="74" y="376" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">reports.</text>
+<text x="74" y="394" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">Used by web layer for auth, persistence,</text>
+<text x="74" y="412" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">and report history.</text>
+<rect x="980" y="1430" rx="16" ry="16" width="560" height="170" fill="#effaf0" stroke="#348456" stroke-width="2"/>
+<rect x="980" y="1430" rx="16" ry="16" width="560" height="34" fill="#1f6f43" />
+<rect x="980" y="1464" width="560" height="136" fill="#effaf0" />
+<line x1="980" y1="1464" x2="1540" y2="1464" stroke="#348456" stroke-width="2"/>
+<text x="1260.0" y="1452" text-anchor="middle" font-family="Segoe UI Semibold, Arial, sans-serif" font-size="16" fill="#ffffff">Outputs</text>
+<text x="994" y="1488" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">BUY / HOLD / SELL recommendation, confidence score, citations, PDF</text>
+<text x="994" y="1506" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">report,</text>
+<text x="994" y="1524" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#12263a">saved chat and report metadata available through the web app and CLI.</text>
+</svg>
